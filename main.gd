@@ -34,6 +34,7 @@ func _process(_delta) -> void:
 		#get_tree().paused = true			# pausa o jogo
 	#move_world()
 
+# Não sei se é viável
 func pause_processing():
 	pause_time = true
 	print("time paused")
@@ -53,7 +54,8 @@ func move_world():
 		action_points -= 1
 		#await get_tree().create_timer(1).timeout
 	
-	# Quando pausa?
+	# Problema do pause_processing é aqui:
+	# Quando pausa? Precisaria esperar todos terminarem o movimento
 	#pause_processing()
 	
 	# Chamar cada jogador/NPC?
