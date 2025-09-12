@@ -8,4 +8,5 @@ process_mode = 3
 script = ExtResource("1_0xm2m")
 
 [node name="Player" parent="." instance=ExtResource("2_h2yge")]
+process_mode = 1
 position = Vector2(501, 325)

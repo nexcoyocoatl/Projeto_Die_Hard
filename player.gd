@@ -15,7 +15,7 @@ func _physics_process(delta: float) -> void:
 	# Cooldown timer para cada ação
 	if move_cooldown_timer > 0:
 		move_cooldown_timer -= 1*delta
-		print("Cooldown timer: ", move_cooldown_timer)
+		#print("Cooldown timer: ", move_cooldown_timer)
 	
 	# Direção do movimento
 	input_direction = Vector2.ZERO
