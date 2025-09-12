@@ -14,23 +14,3 @@ shape = SubResource("RectangleShape2D_onrkg")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_4flbx")
-
-[node name="MovementDown" type="RayCast2D" parent="."]
-position = Vector2(0, 64)
-target_position = Vector2(0, 64)
-hit_from_inside = true
-
-[node name="MovementUp" type="RayCast2D" parent="."]
-position = Vector2(0, -64)
-target_position = Vector2(0, -64)
-hit_from_inside = true
-
-[node name="MovementLeft" type="RayCast2D" parent="."]
-position = Vector2(-64, 0)
-target_position = Vector2(-64, 0)
-hit_from_inside = true
-
-[node name="MovementRight" type="RayCast2D" parent="."]
-position = Vector2(64, 0)
-target_position = Vector2(64, 0)
-hit_from_inside = true
