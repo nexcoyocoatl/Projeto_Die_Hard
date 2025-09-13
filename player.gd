@@ -30,7 +30,7 @@ func receive_action(action):
 # Movimenta o jogador
 func move():
 	var tween = create_tween()
-	tween.tween_property(self, "position", position + (input_direction * tile_size), tween_speed)
+	tween.tween_property(self, "position", position + (input_direction * tile_size), tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_false)
 
 # Função que desativa o movimento após uma ação
