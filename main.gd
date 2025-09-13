@@ -89,5 +89,4 @@ func move_world():
 	awaiting_done_confirmation = get_tree().get_nodes_in_group("Movable").size() + 1 # + Player
 	$Player.receive_action(player_action_queue.pop_front())
 	for movable in get_tree().get_nodes_in_group("Movable"):
-		movable.receive_op
-		pass
+		movable.receive_points()
