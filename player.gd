@@ -13,7 +13,7 @@ var action_points = 0
 func _ready() -> void:
 	tile_size = get_parent().tile_size		# Recebe do Main
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
 	if (moving == false and action_points):
 		moving = true

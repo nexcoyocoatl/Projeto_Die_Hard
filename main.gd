@@ -58,7 +58,7 @@ func _physics_process(delta) -> void:
 		stop_world()
 
 # Nodo Game está setado pra nunca pausar e sempre rodará esta função (e de física) em loop
-func _process(delta) -> void:
+func _process(_delta) -> void:
 	pass
 
 # Pausa todos outros nodos
@@ -86,7 +86,7 @@ func stop_world():
 
 # Função para chamar todos filhos Movable para executarem um movimento
 func move_world():
-	awaiting_done_confirmation = get_tree().get_nodes_in_group("Movable").size() + 1 # + Player
+	awaiting_done_confirmation = get_tree().get_nodes_in_group("Npc").size()
+	awaiting_done_confirmation += 1 # player
 	$Player.receive_action(player_action_queue.pop_front())
-	for movable in get_tree().get_nodes_in_group("Movable"):
-		movable.receive_points()
+	get_tree().call_group("Npc", "receive_points")
