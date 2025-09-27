@@ -1,7 +1,5 @@
 extends CharacterBody2D
 
-const TILE_SIZE : int = 128
-
 enum Mode {
 	PATROL,
 	FOLLOW
@@ -19,9 +17,9 @@ var patrol_path : Array = []
 var current_index : int = 0
 
 func _ready() -> void:
-	line_path.global_position = Vector2(TILE_SIZE/2.0, TILE_SIZE/2.0)
+	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	pathfinding_grid.region = tilemap_layer.get_used_rect()
-	pathfinding_grid.cell_size = Vector2(TILE_SIZE, TILE_SIZE)
+	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
 	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	pathfinding_grid.update()
 	if mode == Mode.PATROL:
@@ -35,15 +33,15 @@ func _generate_patrol_path() -> void:
 	while dist < length:
 		var local_point: Vector2 = path.curve.sample_baked(dist)
 		var global_point: Vector2 = path.to_global(local_point)
-		var cell: Vector2i = (global_point / TILE_SIZE).floor() 
+		var cell: Vector2i = (global_point / GlobalVariables.TILE_SIZE).floor() 
 		patrol_path.append(cell)
-		dist += TILE_SIZE
+		dist += GlobalVariables.TILE_SIZE
 
 	# garante que o último ponto seja o final da curva
-	if dist < length + TILE_SIZE:
+	if dist < length + GlobalVariables.TILE_SIZE:
 		var local_point: Vector2 = path.curve.sample_baked(dist)
 		var global_point: Vector2 = path.to_global(local_point)
-		var cell: Vector2i = (global_point / TILE_SIZE).floor()
+		var cell: Vector2i = (global_point / GlobalVariables.TILE_SIZE).floor()
 		patrol_path.append(cell)
 
 func receive_points():
@@ -68,7 +66,7 @@ func patrol() -> void:
 	if patrol_path.is_empty():
 		move_finished()
 		return
-	var current_position: Vector2i = (global_position / TILE_SIZE).floor()
+	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 	# se npc ainda não está no caminho de patrulha, vai até ele
 	if patrol_path.count(current_position) == 0:
 		var closest_index : int = find_closest_path_point(current_position)
@@ -78,14 +76,14 @@ func patrol() -> void:
 	# chegou no caminho de patrulha, segue de onde está
 	if current_index == patrol_path.size() - 1: current_index = 1
 	else: current_index = (current_index + 1) % patrol_path.size()
-	var target: Vector2 = Vector2(patrol_path[current_index]) * TILE_SIZE + Vector2(TILE_SIZE/2.0, TILE_SIZE/2.0)
+	var target: Vector2 = Vector2(patrol_path[current_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "global_position", target, tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_finished)
 
 func follow_player():
-	var current_position : Vector2i = (global_position / TILE_SIZE).floor()
-	var player_position : Vector2i = (player.global_position / TILE_SIZE).floor()
+	var current_position : Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+	var player_position : Vector2i = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	# se player estiver fora do tilemap
 	if not pathfinding_grid.region.has_point(Vector2i(player_position)):
 		print("player fora do tilemap, nada a fazer")
@@ -100,7 +98,7 @@ func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> voi
 		move_finished() 
 		return
 	path_to_position.remove_at(0)
-	var next_position : Vector2 = path_to_position[0] + Vector2(TILE_SIZE/2.0, TILE_SIZE/2.0)
+	var next_position : Vector2 = path_to_position[0] + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = create_tween()
 	tween.tween_property(self, "global_position", next_position, tween_speed).set_trans(Tween.TRANS_SINE)
 	line_path.points = path_to_position

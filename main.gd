@@ -1,7 +1,6 @@
 extends Node2D
 
 @export var debug : bool = true
-@export var tile_size : int = 128			# Tamanho de tile que os personagens acessam em seu script (provavelmente mudaremos depois)
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
 

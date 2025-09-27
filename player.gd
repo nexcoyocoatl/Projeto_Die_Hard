@@ -2,7 +2,6 @@ extends CharacterBody2D
 
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
 
-var tile_size : int = 0						# Inicializa em 0, mas recebe do Main ao iniciar o jogo
 var input_direction : Vector2 = Vector2.ZERO				# Direção de movimento do jogador
 var moving : bool = false					# Se está movendo ou não
 
@@ -11,8 +10,8 @@ var action_queue = []
 var action_points = 0
 
 func _ready() -> void:
-	tile_size = get_parent().tile_size		# Recebe do Main
-
+	pass
+	
 func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
 	if (moving == false and action_points):
@@ -30,7 +29,7 @@ func receive_action(action):
 # Movimenta o jogador
 func move():
 	var tween = create_tween()
-	tween.tween_property(self, "position", position + (input_direction * tile_size), tween_speed).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "position", position + (input_direction * GlobalVariables.TILE_SIZE), tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_false)
 
 # Função que desativa o movimento após uma ação

@@ -4,16 +4,14 @@
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="2_kh24r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7jktm"]
+size = Vector2(32, 32)
 
-[node name="Npc" type="CharacterBody2D" node_paths=PackedStringArray("tilemap_layer", "player", "line_path", "path") groups=["Npc"]]
+[node name="Npc" type="CharacterBody2D" groups=["Npc"]]
 script = ExtResource("1_xxcha")
-tilemap_layer = NodePath("")
-player = NodePath("")
-line_path = NodePath("")
-path = NodePath("")
 mode = 0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_kh24r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
