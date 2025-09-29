@@ -17,13 +17,18 @@ var patrol_path : Array = []
 var current_index : int = 0
 
 func _ready() -> void:
+	# TODO: definir tiles navegaveis ao inves dos tiles sólidos
 	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	pathfinding_grid.region = tilemap_layer.get_used_rect()
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
 	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	pathfinding_grid.update()
-	if mode == Mode.PATROL:
+	if mode == Mode.PATROL: 
 		_generate_patrol_path()
+		
+	for cell in tilemap_layer.get_used_cells():
+		var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
+		pathfinding_grid.set_point_solid(cell, is_solid)
 
 func _generate_patrol_path() -> void:
 	patrol_path.clear()
@@ -68,6 +73,7 @@ func patrol() -> void:
 		return
 	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 	# se npc ainda não está no caminho de patrulha, vai até ele
+	# TODO: sempre buscar o ponto mais proximo mesmo quando está no path
 	if patrol_path.count(current_position) == 0:
 		var closest_index : int = find_closest_path_point(current_position)
 		go_towards_position(current_position, patrol_path[closest_index])
