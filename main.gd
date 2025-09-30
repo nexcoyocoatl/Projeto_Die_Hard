@@ -23,7 +23,7 @@ func _input(event: InputEvent) -> void:
 				resume_processing() # Despausa em cada botão pressionado, caso necessário
 
 			# Direção do movimento
-			if(move_cooldown_timer <= 0):	# Só funciona quando acabar o cooldown
+			if (move_cooldown_timer <= 0):	# Só funciona quando acabar o cooldown
 				action_points += 1
 
 				input_direction = Vector2.ZERO

@@ -14,7 +14,7 @@ enum Mode {
 
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
 var patrol_path : Array = []
-var current_index : int = 0
+var current_index : int
 
 func _ready() -> void:
 	# TODO: definir tiles navegaveis ao inves dos tiles sólidos
@@ -25,6 +25,8 @@ func _ready() -> void:
 	pathfinding_grid.update()
 	if mode == Mode.PATROL: 
 		_generate_patrol_path()
+		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+		current_index = find_closest_path_point(current_position)
 		
 	for cell in tilemap_layer.get_used_cells():
 		var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
@@ -54,6 +56,8 @@ func receive_points():
 		follow_player()
 	elif mode == Mode.PATROL:
 		if patrol_path.is_empty(): _generate_patrol_path()
+		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+		current_index = find_closest_path_point(current_position)
 		patrol()
 
 func find_closest_path_point(given_position : Vector2i) -> int:
@@ -67,17 +71,14 @@ func find_closest_path_point(given_position : Vector2i) -> int:
 	return closest_index
 
 func patrol() -> void:
-	print(patrol_path)
 	if patrol_path.is_empty():
 		move_finished()
 		return
 	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 	# se npc ainda não está no caminho de patrulha, vai até ele
-	# TODO: sempre buscar o ponto mais proximo mesmo quando está no path
 	if patrol_path.count(current_position) == 0:
-		var closest_index : int = find_closest_path_point(current_position)
-		go_towards_position(current_position, patrol_path[closest_index])
-		current_index = closest_index
+		current_index = find_closest_path_point(current_position)
+		go_towards_position(current_position, patrol_path[current_index])
 		return
 	# chegou no caminho de patrulha, segue de onde está
 	if current_index == patrol_path.size() - 1: current_index = 1
@@ -92,7 +93,6 @@ func follow_player():
 	var player_position : Vector2i = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	# se player estiver fora do tilemap
 	if not pathfinding_grid.region.has_point(Vector2i(player_position)):
-		print("player fora do tilemap, nada a fazer")
 		move_finished()
 		return
 	go_towards_position(current_position, player_position)
@@ -112,3 +112,4 @@ func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> voi
 
 func move_finished() -> void:
 	get_tree().call_group("Game", "child_done_confirmation")
+	
