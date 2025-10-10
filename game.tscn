@@ -126,7 +126,7 @@ sources/0 = SubResource("TileSetAtlasSource_eow3j")
 
 [sub_resource type="Curve2D" id="Curve2D_fc0e3"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 336, 16, 0, 0, 0, 0, 592, 16, 0, 0, 0, 0, 592, 144, 0, 0, 0, 0, 336, 144, 0, 0, 0, 0, 336, 16)
+"points": PackedVector2Array(0, 0, 0, 0, 176, 144, 0, 0, 0, 0, 592, 144, 0, 0, 0, 0, 592, 240, 0, 0, 0, 0, 176, 240, 0, 0, 0, 0, 176, 144)
 }
 point_count = 5
 
@@ -145,13 +145,12 @@ tile_set = SubResource("TileSet_7jktm")
 [node name="Player" parent="." instance=ExtResource("2_feb5d")]
 position = Vector2(1136, 16)
 
-[node name="Npc" parent="." node_paths=PackedStringArray("_tilemap_layer", "_player", "_line_path", "_path") instance=ExtResource("4_fc0e3")]
+[node name="Npc" parent="." node_paths=PackedStringArray("tilemap_layer", "player", "line_path", "path") instance=ExtResource("4_fc0e3")]
 position = Vector2(368, 240)
-_tilemap_layer = NodePath("../TileMapLogico")
-_player = NodePath("../Player")
-_line_path = NodePath("../Line2D")
-_path = NodePath("../Path1")
-_mode = 0
+tilemap_layer = NodePath("../TileMapLogico")
+player = NodePath("../Player")
+line_path = NodePath("../Line2D")
+path = NodePath("../Path1")
 
 [node name="Path1" type="Path2D" parent="."]
 curve = SubResource("Curve2D_fc0e3")
