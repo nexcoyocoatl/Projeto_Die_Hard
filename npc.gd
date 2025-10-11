@@ -27,10 +27,17 @@ func _ready() -> void:
 		_generate_patrol_path()
 		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 		current_index = find_closest_path_point(current_position)
-		
-	for cell in tilemap_layer.get_used_cells():
-		var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
-		pathfinding_grid.set_point_solid(cell, is_solid)
+	
+	for y in pathfinding_grid.region.size.y:
+		for x in pathfinding_grid.region.size.x:
+			var cell : Vector2i = Vector2i(x,y)
+			if !tilemap_layer.get_used_cells().has(cell):
+				pathfinding_grid.set_point_solid(cell, true)
+	
+	# Forma anterior
+	#for cell in tilemap_layer.get_used_cells():
+		#var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
+		#pathfinding_grid.set_point_solid(cell, is_solid)
 
 func _generate_patrol_path() -> void:
 	patrol_path.clear()

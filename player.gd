@@ -16,8 +16,13 @@ func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
 	if (moving == false and action_points):
 		moving = true
+		if (action_queue.front() == null):
+			action_queue.pop_front()
+			move_false()
+			return
 		input_direction = action_queue.pop_front()
 		move()
+		
 
 func receive_action(action):
 	print("player received action")
