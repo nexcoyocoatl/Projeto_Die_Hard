@@ -31,8 +31,9 @@ func _ready() -> void:
 	for cell in tilemap_layer.get_used_cells():
 		used_cells[cell] = true
 
-	for y in pathfinding_grid.region.size.y:
-		for x in pathfinding_grid.region.size.x:
+	var region : Rect2i = pathfinding_grid.region
+	for y in range(region.position.y, region.position.y + region.size.y):
+		for x in range(region.position.x, region.position.x + region.size.x):
 			var cell : Vector2i = Vector2i(x, y)
 			if !used_cells.has(cell):
 					pathfinding_grid.set_point_solid(cell, true)
