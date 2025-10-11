@@ -89,5 +89,5 @@ func stop_world():
 func move_world():
 	awaiting_done_confirmation = get_tree().get_nodes_in_group("Npc").size()
 	awaiting_done_confirmation += 1 # player
-	$Player.receive_action(player_action_queue.pop_front())
+	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
