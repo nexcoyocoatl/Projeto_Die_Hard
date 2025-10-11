@@ -17,7 +17,6 @@ var patrol_path : Array = []
 var current_index : int
 
 func _ready() -> void:
-	# TODO: definir tiles navegaveis ao inves dos tiles sólidos
 	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	pathfinding_grid.region = tilemap_layer.get_used_rect()
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
@@ -28,11 +27,15 @@ func _ready() -> void:
 		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 		current_index = find_closest_path_point(current_position)
 	
+	var used_cells : Dictionary[Vector2i, bool] = {}
+	for cell in tilemap_layer.get_used_cells():
+		used_cells[cell] = true
+
 	for y in pathfinding_grid.region.size.y:
 		for x in pathfinding_grid.region.size.x:
-			var cell : Vector2i = Vector2i(x,y)
-			if !tilemap_layer.get_used_cells().has(cell):
-				pathfinding_grid.set_point_solid(cell, true)
+			var cell : Vector2i = Vector2i(x, y)
+			if !used_cells.has(cell):
+					pathfinding_grid.set_point_solid(cell, true)
 	
 	# Forma anterior
 	#for cell in tilemap_layer.get_used_cells():
