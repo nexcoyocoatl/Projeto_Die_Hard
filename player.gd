@@ -10,7 +10,8 @@ var action_queue = []
 var action_points = 0
 
 func _ready() -> void:
-	pass
+	# Prende jogador ao centro do tile mais próximo (TODO: talvez mudar depois que o player puder receber o tilemap)
+	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	
 func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
@@ -25,7 +26,7 @@ func _physics_process(_delta: float) -> void:
 		
 
 func receive_action(action):
-	print("player received action")
+	if (GlobalVariables.DEBUG): print("player received action")
 	action_points += 1
 	
 	# Por enquanto só pra movimento, se usar outra ação ou botão, quebra a execução
@@ -40,10 +41,10 @@ func move():
 # Função que desativa o movimento após uma ação
 func move_false():
 	moving = false
-	print("Move false")
+	if (GlobalVariables.DEBUG): print("Move false")
 	
 	# Diminui os action points, e se acaba todos, avisa a cena Game (Main) que terminou
 	action_points -= 1
 	if action_points <= 0:
-		print("player stops moving")
+		if (GlobalVariables.DEBUG): print("player stops moving")
 		get_tree().call_group("Game", "child_done_confirmation")
