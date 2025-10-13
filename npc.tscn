@@ -16,3 +16,6 @@ texture = ExtResource("2_kh24r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_7jktm")
+
+[node name="ConeRay" type="RayCast2D" parent="."]
+target_position = Vector2(0, 224)

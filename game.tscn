@@ -1,11 +1,10 @@
-[gd_scene load_steps=13 format=4 uid="uid://bc5f8g0ubj3k3"]
+[gd_scene load_steps=11 format=4 uid="uid://bc5f8g0ubj3k3"]
 
 [ext_resource type="Script" uid="uid://eeirddr4r3aw" path="res://main.gd" id="1_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://tile_logico.svg" id="2_7jktm"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://player.tscn" id="2_feb5d"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="3_feb5d"]
 [ext_resource type="PackedScene" uid="uid://k2amkrrjelcl" path="res://npc.tscn" id="4_fc0e3"]
-[ext_resource type="Texture2D" uid="uid://b3q82vq3e2lyb" path="res://cone of vision.png" id="6_ryrav"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("3_feb5d")
@@ -55,18 +54,14 @@ physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_ryrav")
 sources/0 = SubResource("TileSetAtlasSource_eow3j")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ryrav"]
+size = Vector2(32, 32)
+
 [sub_resource type="Curve2D" id="Curve2D_fc0e3"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 176, 144, 0, 0, 0, 0, 592, 144, 0, 0, 0, 0, 592, 240, 0, 0, 0, 0, 176, 240, 0, 0, 0, 0, 176, 144)
 }
 point_count = 5
-
-[sub_resource type="Gradient" id="Gradient_ryrav"]
-offsets = PackedFloat32Array(0.013333334, 1)
-colors = PackedColorArray(0.29411766, 0.29411766, 0.29411766, 1, 0.29586652, 0.2958665, 0.2958665, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_eow3j"]
-gradient = SubResource("Gradient_ryrav")
 
 [node name="Game" type="Node2D" groups=["Game"]]
 process_mode = 3
@@ -84,7 +79,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAIAAQAAAAA
 tile_set = SubResource("TileSet_7jktm")
 
 [node name="Player" parent="Level" instance=ExtResource("2_feb5d")]
-position = Vector2(142, 348)
+position = Vector2(464, 176)
 
 [node name="Camera2D" type="Camera2D" parent="Level/Player"]
 drag_horizontal_enabled = true
@@ -92,34 +87,30 @@ drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
+[node name="Area2D" type="Area2D" parent="Level"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Area2D"]
+position = Vector2(464, 240)
+shape = SubResource("RectangleShape2D_ryrav")
+
+[node name="Area2D2" type="Area2D" parent="Level"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Level/Area2D2"]
+position = Vector2(448, 320)
+shape = SubResource("RectangleShape2D_ryrav")
+
 [node name="Npc" parent="Level" node_paths=PackedStringArray("tilemap_layer", "player", "line_path", "path") instance=ExtResource("4_fc0e3")]
 position = Vector2(368, 240)
 tilemap_layer = NodePath("../Level1_LogicalTileMap")
 player = NodePath("../Player")
 line_path = NodePath("../Line2D")
 path = NodePath("../Path1")
-mode = 1
-
-[node name="PointLight2D" type="PointLight2D" parent="Level/Npc"]
-scale = Vector2(1.5, 1.5)
-energy = 2.0
-texture = ExtResource("6_ryrav")
-
-[node name="Polygon2D" type="Polygon2D" parent="Level/Npc"]
-position = Vector2(-368, -240)
-polygon = PackedVector2Array(352, 240, 256, 80, 288, 64, 352, 48, 384, 48, 448, 64, 480, 80, 384, 240)
 
 [node name="Path1" type="Path2D" parent="Level"]
+visible = false
 curve = SubResource("Curve2D_fc0e3")
 
 [node name="Line2D" type="Line2D" parent="Level"]
 points = PackedVector2Array(-40, -32)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
-
-[node name="TEXTURASÓPRAVERALUZ" type="TextureRect" parent="."]
-offset_left = -528.0
-offset_top = -48.0
-offset_right = 1616.0
-offset_bottom = 1360.0
-texture = SubResource("GradientTexture2D_eow3j")

@@ -5,18 +5,71 @@ enum Mode {
 	FOLLOW
 }
 
+enum Direction {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+}
+
 @export var tilemap_layer : TileMapLayer = null
 @export var player : CharacterBody2D = null
+
+# Pathfinding
 @export var line_path : Line2D = null
-@export var tween_speed : float = 0.2
 @export var path : Path2D = null
 @export var mode : Mode = Mode.FOLLOW
-
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
 var patrol_path : Array = []
 var current_index : int
 
+# Movement
+@export var tween_speed : float = 0.2
+var moving = false
+var past_position : Vector2 = Vector2(0,0)
+var direction : Direction
+var cooldown : int = 0
+
+# Vision Cone
+@export var cone_ray_dist : int = 7
+@export var cone_ray_angle : int = 40
+var alert : bool = false
+var cone_ray : RayCast2D
+var cone_polygon : PackedVector2Array = []
+
+func _draw() -> void:
+	# Desenha polígono do cone de visão
+	if (cone_polygon.size() > 3): # Só tenta desenhar se tem um polígono
+		if (alert):
+			draw_polygon(cone_polygon, [Color(130.0, 0.0, 0.0, 0.2)])
+		else:
+			draw_polygon(cone_polygon, [Color(130.0, 130.0, 0.0, 0.2)])
+	
+func _process(_delta) -> void:
+	if (moving):
+		match direction:
+			Direction.UP:
+				cone_ray.rotation_degrees = 180
+			Direction.DOWN:
+				cone_ray.rotation_degrees = 0
+			Direction.LEFT:
+				cone_ray.rotation_degrees = 90
+			Direction.RIGHT:
+				cone_ray.rotation_degrees = 270
+				
+		create_cone()
+	
 func _ready() -> void:
+	# Vision Cone
+	cone_ray = $ConeRay
+	cone_ray_dist *= GlobalVariables.TILE_SIZE
+	cone_ray.target_position = Vector2(0,cone_ray_dist)
+	cone_ray.collide_with_areas = true # Colide com areas2d também
+	
+	#create_cone() # Cria cone pela primeira vez (desnecessário)
+	
+	# Pathfinding
+	# TODO: Mudar para o Game(main.gd) maior parte da lógica
 	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	pathfinding_grid.region = tilemap_layer.get_used_rect()
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
@@ -43,6 +96,30 @@ func _ready() -> void:
 		#var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
 		#pathfinding_grid.set_point_solid(cell, is_solid)
 
+# Cria polígono do cone de visão
+func create_cone():
+	alert = 0
+	cone_polygon.clear()
+	cone_polygon.append(cone_ray.position) # Posição do NPC
+	var original_rotation = cone_ray.rotation_degrees
+	
+	# Raycaster do ângulo de visão
+	for i in range(-cone_ray_angle, cone_ray_angle+1):
+		cone_ray.rotation_degrees = original_rotation + i
+		cone_ray.force_raycast_update()
+		if (cone_ray.is_colliding()):
+			# Dá pra fazer por aqui direto ou pelo collision shape
+			if (cone_ray.get_collider() == get_tree().get_nodes_in_group("Player")[0]):
+				cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
+				if (!alert):
+					alert = 1
+			else:
+				cone_polygon.append(cone_ray.get_collision_point() - cone_ray.to_global(Vector2.ZERO))
+				continue
+		cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
+	cone_ray.rotation_degrees = original_rotation
+	queue_redraw()
+
 func _generate_patrol_path() -> void:
 	patrol_path.clear()
 	var length: float = path.curve.get_baked_length()
@@ -63,6 +140,7 @@ func _generate_patrol_path() -> void:
 		patrol_path.append(cell)
 
 func receive_points():
+	moving = true
 	if mode == Mode.FOLLOW: 
 		follow_player()
 	elif mode == Mode.PATROL:
@@ -122,5 +200,6 @@ func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> voi
 	tween.tween_callback(move_finished)
 
 func move_finished() -> void:
+	moving = false
 	get_tree().call_group("Game", "child_done_confirmation")
 	
