@@ -27,6 +27,7 @@ var current_index : int
 @export var tween_speed : float = 0.2
 var moving = false
 var past_position : Vector2 = Vector2(0,0)
+var direction_set : bool = false
 var direction : Direction
 var cooldown : int = 0
 
@@ -174,6 +175,10 @@ func patrol() -> void:
 	else: current_index = (current_index + 1) % patrol_path.size()
 	var target: Vector2 = Vector2(patrol_path[current_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = get_tree().create_tween()
+	
+	# Facing direction
+	change_direction((target - global_position).normalized())
+	
 	tween.tween_property(self, "global_position", target, tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_finished)
 
@@ -195,9 +200,24 @@ func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> voi
 	path_to_position.remove_at(0)
 	var next_position : Vector2 = path_to_position[0] + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = create_tween()
+	
+	# Facing direction
+	change_direction((next_position - global_position).normalized())
+	
 	tween.tween_property(self, "global_position", next_position, tween_speed).set_trans(Tween.TRANS_SINE)
 	line_path.points = path_to_position
 	tween.tween_callback(move_finished)
+
+func change_direction(move_direction: Vector2) -> void:
+	move_direction = move_direction
+	if (move_direction.x < 0.):
+		direction = Direction.LEFT
+	if (move_direction.x > 0.):
+		direction = Direction.RIGHT
+	if (move_direction.y < 0.):
+		direction = Direction.UP
+	if (move_direction.y > 0.):
+		direction = Direction.DOWN
 
 func move_finished() -> void:
 	moving = false
