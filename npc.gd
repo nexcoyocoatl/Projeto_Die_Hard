@@ -95,25 +95,38 @@ func _ready() -> void:
 
 # Cria polígono do cone de visão
 func create_cone():
-	alert = 0
 	cone_polygon.clear()
 	cone_polygon.append(cone_ray.position) # Posição do NPC
 	var original_rotation = cone_ray.rotation_degrees
+	var player_found : bool = false
+	var player_node : CharacterBody2D = get_tree().get_nodes_in_group("Player")[0]
 	
 	# Raycaster do ângulo de visão
 	for i in range(-cone_ray_angle, cone_ray_angle+1):
 		cone_ray.rotation_degrees = original_rotation + i
 		cone_ray.force_raycast_update()
 		if (cone_ray.is_colliding()):
-			# Dá pra fazer por aqui direto ou pelo collision shape
-			if (cone_ray.get_collider() == get_tree().get_nodes_in_group("Player")[0]):
-				cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
-				if (!alert):
-					alert = 1
-			else:
-				cone_polygon.append(cone_ray.get_collision_point() - cone_ray.to_global(Vector2.ZERO))
+			var colliding_object = cone_ray.get_collider()
+			
+			if (!player_found and colliding_object == player_node):
+				player_found = true
+				alert = true
+				cone_ray.add_exception(player_node)
+				cone_ray.force_raycast_update()
+				if (cone_ray.is_colliding()):
+					cone_polygon.append(cone_ray.get_collision_point() - cone_ray.to_global(Vector2.ZERO))
+				else:
+					cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
 				continue
+			cone_polygon.append(cone_ray.get_collision_point() - cone_ray.to_global(Vector2.ZERO))
+			continue
 		cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
+	
+	if (player_found):
+		cone_ray.remove_exception(player_node)
+	else:
+		alert = false
+		
 	cone_ray.rotation_degrees = original_rotation
 	queue_redraw()
 
