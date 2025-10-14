@@ -25,7 +25,8 @@ func _input(event: InputEvent) -> void:
 				resume_processing() # Despausa em cada botão pressionado, caso necessário
 
 			# Direção do movimento
-			if (move_cooldown_timer <= 0):	# Só funciona quando acabar o cooldown
+			# Só funciona quando acabar o cooldown E o mundo estiver parado
+			if (!world_moving and move_cooldown_timer <= 0):
 				action_points += 1
 
 				input_direction = Vector2.ZERO
@@ -47,13 +48,13 @@ func _physics_process(delta) -> void:
 	if move_cooldown_timer > 0:
 		move_cooldown_timer -= 1*delta
 
-	if (action_points > 0 and world_moving == false):
+	if (action_points > 0 and !world_moving):
 		world_moving = true
 		action_points -= 1
 		move_cooldown_timer = move_cooldown
 		move_world()
 
-	if (awaiting_done_confirmation <= 0 and world_moving == true):
+	if (awaiting_done_confirmation <= 0 and world_moving):
 		world_moving = false
 		print(awaiting_done_confirmation)
 		stop_world()
