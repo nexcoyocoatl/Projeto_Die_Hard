@@ -67,8 +67,6 @@ func _ready() -> void:
 	cone_ray.target_position = Vector2(0,cone_ray_dist)
 	cone_ray.collide_with_areas = true # Colide com areas2d também
 	
-	#create_cone() # Cria cone pela primeira vez (desnecessário)
-	
 	# Pathfinding
 	# TODO: Mudar para o Game(main.gd) maior parte da lógica
 	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
@@ -84,18 +82,16 @@ func _ready() -> void:
 	var used_cells : Dictionary[Vector2i, bool] = {}
 	for cell in tilemap_layer.get_used_cells():
 		used_cells[cell] = true
+		if (tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0):
+			# TODO: esconder tile sólida
+			pathfinding_grid.set_point_solid(cell, true)
 
 	var region : Rect2i = pathfinding_grid.region
 	for y in range(region.position.y, region.position.y + region.size.y):
 		for x in range(region.position.x, region.position.x + region.size.x):
 			var cell : Vector2i = Vector2i(x, y)
 			if !used_cells.has(cell):
-					pathfinding_grid.set_point_solid(cell, true)
-	
-	# Forma anterior
-	#for cell in tilemap_layer.get_used_cells():
-		#var is_solid : bool = tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
-		#pathfinding_grid.set_point_solid(cell, is_solid)
+				pathfinding_grid.set_point_solid(cell, true)
 
 # Cria polígono do cone de visão
 func create_cone():
@@ -222,4 +218,3 @@ func change_direction(move_direction: Vector2) -> void:
 func move_finished() -> void:
 	moving = false
 	get_tree().call_group("Game", "child_done_confirmation")
-	
