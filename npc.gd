@@ -82,8 +82,11 @@ func _ready() -> void:
 	var used_cells : Dictionary[Vector2i, bool] = {}
 	for cell in tilemap_layer.get_used_cells():
 		used_cells[cell] = true
+		# Se tile tem colisão
 		if (tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0):
-			# TODO: esconder tile sólida
+			# Esconde tile
+			tilemap_layer.get_cell_tile_data(cell).modulate.a = 0.0
+			# Põe no pathfinding grid como sólido
 			pathfinding_grid.set_point_solid(cell, true)
 
 	var region : Rect2i = pathfinding_grid.region
