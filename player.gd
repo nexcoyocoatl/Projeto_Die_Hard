@@ -35,7 +35,7 @@ func receive_action(action):
 # Movimenta o jogador
 func move():
 	var cell : Vector2i = Vector2i(position/GlobalVariables.TILE_SIZE + input_direction)
-	print(cell)
+	if (GlobalVariables.DEBUG): print(cell) # TODO: Para verificar próxima tile para a qual o player se movimentará
 	var tween = create_tween()
 	
 	# TODO: muito ineficiente e contém bug na parte superior e a esquerda do mapa (avança um tile a mais)
