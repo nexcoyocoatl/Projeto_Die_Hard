@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
+@export var tilemap_layer : TileMapLayer
 
 var input_direction : Vector2 = Vector2.ZERO				# Direção de movimento do jogador
 var moving : bool = false					# Se está movendo ou não
@@ -24,7 +25,6 @@ func _physics_process(_delta: float) -> void:
 		input_direction = action_queue.pop_front()
 		move()
 		
-
 func receive_action(action):
 	if (GlobalVariables.DEBUG): print("player received action")
 	action_points += 1
@@ -34,8 +34,18 @@ func receive_action(action):
 
 # Movimenta o jogador
 func move():
+	var cell : Vector2i = Vector2i(position/GlobalVariables.TILE_SIZE + input_direction)
+	print(cell)
 	var tween = create_tween()
-	tween.tween_property(self, "position", position + (input_direction * GlobalVariables.TILE_SIZE), tween_speed).set_trans(Tween.TRANS_SINE)
+	
+	# TODO: muito ineficiente e contém bug na parte superior e a esquerda do mapa (avança um tile a mais)
+	if (cell not in tilemap_layer.get_used_cells()) \
+	or (tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0):
+	#or cell not in tilemap_layer.get_used_cells():
+		tween.tween_property(self, "position", position + (input_direction * (GlobalVariables.TILE_SIZE/4.0)), tween_speed/2).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(self, "position", position, tween_speed/2).set_trans(Tween.TRANS_BOUNCE)
+	else:
+		tween.tween_property(self, "position", position + (input_direction * GlobalVariables.TILE_SIZE), tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_false)
 
 # Função que desativa o movimento após uma ação
