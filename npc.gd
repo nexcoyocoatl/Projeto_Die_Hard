@@ -12,8 +12,8 @@ enum Direction {
 	RIGHT
 }
 
-@export var tilemap_layer : TileMapLayer = null
-@export var player : CharacterBody2D = null
+var tilemap_layer : TileMapLayer = null
+var player : CharacterBody2D = null
 
 # Pathfinding
 @export var line_path : Line2D = null
@@ -38,6 +38,13 @@ var alert : bool = false
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
+func _ready() -> void:
+	# Vision Cone
+	cone_ray = $ConeRay
+	cone_ray_dist *= GlobalVariables.TILE_SIZE
+	cone_ray.target_position = Vector2(0,cone_ray_dist)
+	cone_ray.collide_with_areas = true # Colide com areas2d também
+	
 func _draw() -> void:
 	# Desenha polígono do cone de visão
 	if (cone_polygon.size() > 3): # Só tenta desenhar se tem um polígono
@@ -60,13 +67,8 @@ func _process(_delta) -> void:
 				
 		create_cone()
 	
-func _ready() -> void:
-	# Vision Cone
-	cone_ray = $ConeRay
-	cone_ray_dist *= GlobalVariables.TILE_SIZE
-	cone_ray.target_position = Vector2(0,cone_ray_dist)
-	cone_ray.collide_with_areas = true # Colide com areas2d também
-	
+func receive_tilemap(tilemap : TileMapLayer) -> void:
+	self.tilemap_layer = tilemap
 	# Pathfinding
 	# TODO: Mudar para o Game(main.gd) maior parte da lógica
 	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
@@ -95,7 +97,10 @@ func _ready() -> void:
 			var cell : Vector2i = Vector2i(x, y)
 			if !used_cells.has(cell):
 				pathfinding_grid.set_point_solid(cell, true)
-
+	
+func receive_player_reference(_player: CharacterBody2D) -> void:
+	self.player = _player
+	
 # Cria polígono do cone de visão
 func create_cone():
 	cone_polygon.clear()

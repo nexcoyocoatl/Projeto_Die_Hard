@@ -5,6 +5,7 @@ extends Node2D
 @export var debug : bool = true
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
+@export var logical_tilemap : TileMapLayer
 
 var input_direction : Vector2				# Direção de movimento do jogador
 var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movimento
@@ -15,6 +16,14 @@ var world_moving : bool = false
 
 func _ready() -> void:
 	world_moving = false
+	
+	# Passa o tilemap para quem utiliza ele. Talvez colocar isso dentro do Level depois
+	get_tree().call_group("Player", "receive_tilemap", logical_tilemap)
+	get_tree().call_group("Npc", "receive_tilemap", logical_tilemap)
+	
+	# Passa referencia do player para os npcs. Analisar se pode passar só a posição
+	get_tree().call_group("Npc", "receive_player_reference", $Level/Player)
+
 	pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
 
 # Ativa movimentos pelo input, que funciona por eventos de botões pressionados
