@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmwtvjs1r5mqn"
-path="res://.godot/imported/cone of vision.png-0f6f16b0a53e650ce9fe51f403af6332.ctex"
+uid="uid://bf8bxnu0huryg"
+path="res://.godot/imported/icon.svg-f434aa81383d8e7efdc588f214c40953.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://cone of vision.png"
-dest_files=["res://.godot/imported/cone of vision.png-0f6f16b0a53e650ce9fe51f403af6332.ctex"]
+source_file="res://Textures/icon.svg"
+dest_files=["res://.godot/imported/icon.svg-f434aa81383d8e7efdc588f214c40953.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

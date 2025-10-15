@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cg874udpb5m23"
-path="res://.godot/imported/tile_logico_old.svg-451cba70680bef4c447cdfdbf79ee791.ctex"
+uid="uid://dw2kh7obxooli"
+path="res://.godot/imported/tile_collision.svg-d9f9fd268f0b06fba055c1c9ded680a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tile_logico_old.svg"
-dest_files=["res://.godot/imported/tile_logico_old.svg-451cba70680bef4c447cdfdbf79ee791.ctex"]
+source_file="res://Textures/Tiles/tile_collision.svg"
+dest_files=["res://.godot/imported/tile_collision.svg-d9f9fd268f0b06fba055c1c9ded680a6.ctex"]
 
 [params]
 
