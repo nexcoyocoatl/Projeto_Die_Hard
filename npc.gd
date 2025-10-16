@@ -63,21 +63,28 @@ func _draw() -> void:
 	
 func _process(_delta) -> void:
 	if (moving):
-		match direction:
-			Direction.UP:
-				cone_ray.rotation_degrees = 180
-			Direction.DOWN:
-				cone_ray.rotation_degrees = 0
-			Direction.LEFT:
-				cone_ray.rotation_degrees = 90
-			Direction.RIGHT:
-				cone_ray.rotation_degrees = 270
-				
-		create_cone()
-		if alert:
+		if (alert):
+			cone_ray.look_at(player.position)
+			
+			# Pra ajustar o look_at que fica "torto" 90 graus
+			# (TODO: não é necessário, mas talvez ver como arrumar)
+			cone_ray.rotation_degrees -= 90
+			
 			if mode == Mode.PATROL:
 				mode = Mode.FOLLOW
 			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
+		else:
+			match direction:
+				Direction.UP:
+					cone_ray.rotation_degrees = 180
+				Direction.DOWN:
+					cone_ray.rotation_degrees = 0
+				Direction.LEFT:
+					cone_ray.rotation_degrees = 90
+				Direction.RIGHT:
+					cone_ray.rotation_degrees = 270
+				
+		create_cone()
 	
 func receive_tilemap(tilemap : TileMapLayer) -> void:
 	self.tilemap_layer = tilemap
