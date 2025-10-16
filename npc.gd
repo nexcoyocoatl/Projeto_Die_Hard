@@ -34,7 +34,10 @@ var cooldown : int = 0
 
 # Vision Cone
 @export var cone_ray_dist : int = 7
-@export var cone_ray_angle : int = 40
+var cone_ray_dist_alert : int = 10
+@export var cone_ray_angle_normal : int = 40
+@export var cone_ray_angle_alert : int = 30
+var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
@@ -43,6 +46,7 @@ func _ready() -> void:
 	# Vision Cone
 	cone_ray = $ConeRay
 	cone_ray_dist *= GlobalVariables.TILE_SIZE
+	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
 	cone_ray.target_position = Vector2(0,cone_ray_dist)
 	cone_ray.collide_with_areas = true # Colide com areas2d também
 	
@@ -122,6 +126,8 @@ func create_cone():
 			if (!player_found and colliding_object == player):
 				player_found = true
 				alert = true
+				cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
+				cone_ray_angle = cone_ray_angle_alert
 				cone_ray.add_exception(player)
 				cone_ray.force_raycast_update()
 				if (cone_ray.is_colliding()):
@@ -137,6 +143,8 @@ func create_cone():
 		cone_ray.remove_exception(player)
 	else:
 		alert = false
+		cone_ray.target_position = Vector2(0,cone_ray_dist)
+		cone_ray_angle = cone_ray_angle_normal
 		
 	cone_ray.rotation_degrees = original_rotation
 	queue_redraw()
