@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://eeirddr4r3aw" path="res://main.gd" id="1_e2o6t"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_7jktm"]
-[ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://player.tscn" id="2_feb5d"]
+[ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="2_feb5d"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://Textures/icon.svg" id="3_feb5d"]
-[ext_resource type="PackedScene" uid="uid://k2amkrrjelcl" path="res://npc.tscn" id="4_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://k2amkrrjelcl" path="res://Characters/npc.tscn" id="4_fc0e3"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="4_ryrav"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]

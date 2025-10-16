@@ -16,6 +16,8 @@ var tilemap_layer : TileMapLayer = null
 var player : CharacterBody2D = null
 
 # Pathfinding
+@export_category("Script Exports")
+@export_group("Pathfinding")
 @export var line_path : Line2D = null
 @export var path : Path2D = null
 @export var mode : Mode = Mode.FOLLOW
@@ -25,6 +27,7 @@ var current_patrol_index : int = -1
 var last_player_position : Vector2i
 
 # Movement
+@export_group("Animation and Movement")
 @export var tween_speed : float = 0.2
 var moving = false
 var past_position : Vector2 = Vector2(0,0)
@@ -33,10 +36,11 @@ var direction : Direction
 var cooldown : int = 0
 
 # Vision Cone
+@export_group("Vision Cone")
 @export var cone_ray_dist : int = 7
-var cone_ray_dist_alert : int = 10
-@export var cone_ray_angle_normal : int = 40
-@export var cone_ray_angle_alert : int = 30
+@export var cone_ray_dist_alert : int = 10
+@export_range(10,90) var cone_ray_angle_normal : int = 40
+@export_range(10,90) var cone_ray_angle_alert : int = 30
 var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
 var cone_ray : RayCast2D

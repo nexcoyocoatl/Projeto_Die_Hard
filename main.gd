@@ -1,8 +1,12 @@
 extends Node2D
 
+@export_category("Script Exports")
+@export_group("Debug")
 @export var debug : bool = true
+@export_group("Time and Movement")
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
+@export_group("Scenes")
 @export var logical_tilemap : TileMapLayer
 
 var input_direction : Vector2				# Direção de movimento do jogador

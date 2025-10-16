@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@export_category("Script Exports")
+@export_group("Animation and Movement")
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
 var tilemap_layer : TileMapLayer
 
