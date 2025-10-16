@@ -43,6 +43,7 @@ var cooldown : int = 0
 @export_range(10,90) var cone_ray_angle_alert : int = 30
 var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
+var shoot : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
@@ -58,12 +59,13 @@ func _draw() -> void:
 	# Desenha polígono do cone de visão
 	if (cone_polygon.size() > 3): # Só tenta desenhar se tem um polígono
 		if (alert):
-			draw_polygon(cone_polygon, [Color(130.0, 0.0, 0.0, 0.2)])
-			if mode == Mode.PATROL:
-				mode = Mode.FOLLOW
-			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
+			draw_polygon(cone_polygon, [Color(1.0, 0.7, 0.0, 0.2)])
+		elif (mode == Mode.FOLLOW):
+			draw_polygon(cone_polygon, [Color(1.0, 1.0, 0.0, 0.2)])
+		elif (shoot):
+			draw_polygon(cone_polygon, [Color(1.0, 0.0, 0.0, 0.2)])
 		else:
-			draw_polygon(cone_polygon, [Color(130.0, 130.0, 0.0, 0.2)])
+			draw_polygon(cone_polygon, [Color(1.0, 1.0, 1.0, 0.2)])
 	
 func _process(_delta) -> void:
 	if (moving):
@@ -87,8 +89,15 @@ func _process(_delta) -> void:
 					cone_ray.rotation_degrees = 90
 				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
-				
 		create_cone()
+		
+	# Troquei pra cá, pra tirar do desenho (aqui parece mais apropriado)
+	if (alert):
+		if mode == Mode.PATROL:
+			mode = Mode.FOLLOW
+			
+			# TODO: necessário?
+			#last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	
 func receive_tilemap(tilemap : TileMapLayer) -> void:
 	self.tilemap_layer = tilemap
@@ -99,6 +108,7 @@ func receive_tilemap(tilemap : TileMapLayer) -> void:
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
 	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	pathfinding_grid.update()
+	if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
 	
 	var used_cells : Dictionary[Vector2i, bool] = {}
 	for cell in tilemap_layer.get_used_cells():
@@ -269,4 +279,5 @@ func change_direction(move_direction: Vector2) -> void:
 
 func move_finished() -> void:
 	moving = false
+	if (GlobalVariables.DEBUG): print(self.name, " stops moving")
 	get_tree().call_group("Game", "child_done_confirmation")

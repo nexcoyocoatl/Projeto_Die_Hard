@@ -31,7 +31,7 @@ func _physics_process(_delta: float) -> void:
 		move()
 		
 func receive_action(action):
-	if (GlobalVariables.DEBUG): print("player received action")
+	if (GlobalVariables.DEBUG): print("Player received action")
 	action_points += 1
 	
 	# Por enquanto só pra movimento, se usar outra ação ou botão, quebra a execução
@@ -40,7 +40,6 @@ func receive_action(action):
 # Movimenta o jogador
 func move():
 	var cell : Vector2i = (position/GlobalVariables.TILE_SIZE + input_direction).floor()
-	if (GlobalVariables.DEBUG): print(cell) # TODO: Para verificar próxima tile para a qual o player se movimentará
 	var tween = create_tween()
 
 	# TODO: muito ineficiente e contém bug na parte superior e a esquerda do mapa (avança um tile a mais)
@@ -56,10 +55,10 @@ func move():
 # Função que desativa o movimento após uma ação
 func move_false():
 	moving = false
-	if (GlobalVariables.DEBUG): print("Move false")
+	if (GlobalVariables.DEBUG): print("Player finished one move")
 	
 	# Diminui os action points, e se acaba todos, avisa a cena Game (Main) que terminou
 	action_points -= 1
 	if action_points <= 0:
-		if (GlobalVariables.DEBUG): print("player stops moving")
+		if (GlobalVariables.DEBUG): print("Player stops moving")
 		get_tree().call_group("Game", "child_done_confirmation")

@@ -1,8 +1,6 @@
 extends Node2D
 
 @export_category("Script Exports")
-@export_group("Debug")
-@export var debug : bool = true
 @export_group("Time and Movement")
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
@@ -67,7 +65,7 @@ func _physics_process(delta) -> void:
 
 	if (awaiting_done_confirmation <= 0 and world_moving):
 		world_moving = false
-		print(awaiting_done_confirmation)
+		if (GlobalVariables.DEBUG): print("All Characters/Objects moved and confirmed")
 		stop_world()
 
 # Nodo Game está setado pra nunca pausar e sempre rodará esta função (e de física) em loop
@@ -77,14 +75,14 @@ func _process(_delta) -> void:
 # Pausa todos outros nodos
 func pause_processing():
 	pause_time = true
-	print("time paused")
+	if (GlobalVariables.DEBUG): print("Time Paused")
 	OS.low_processor_usage_mode = true
 	get_tree().paused = true
 
 # Despausa
 func resume_processing():
 	pause_time = false
-	print("time resumed")
+	if (GlobalVariables.DEBUG): ("Time Resumed")
 	OS.low_processor_usage_mode = false
 	get_tree().paused = false
 
