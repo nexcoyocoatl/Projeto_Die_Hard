@@ -1,4 +1,4 @@
 extends Node
 
-const DEBUG = 1
+const DEBUG = 0
 const TILE_SIZE : int = 32
