@@ -68,6 +68,9 @@ func _draw() -> void:
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 1.0, 0.2)])
 	
 func _process(_delta) -> void:
+	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
+	# Ou talvez por "som"?
+	
 	if (moving):
 		if (alert):
 			cone_ray.look_at(player.position)
@@ -147,7 +150,6 @@ func create_cone():
 			if (!player_found and colliding_object == player):
 				player_found = true
 				alert = true
-				cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
 				cone_ray_angle = cone_ray_angle_alert
 				cone_ray.add_exception(player)
 				cone_ray.force_raycast_update()
@@ -164,7 +166,6 @@ func create_cone():
 		cone_ray.remove_exception(player)
 	else:
 		alert = false
-		cone_ray.target_position = Vector2(0,cone_ray_dist)
 		cone_ray_angle = cone_ray_angle_normal
 		
 	cone_ray.rotation_degrees = original_rotation
@@ -193,9 +194,11 @@ func receive_points():
 	moving = true
 	match mode:
 		Mode.FOLLOW:
+			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
 			current_patrol_index = -1
 			follow_player()
 		Mode.PATROL: 
+			cone_ray.target_position = Vector2(0,cone_ray_dist)
 			if patrol_path.is_empty():
 				_generate_patrol_path()
 			if current_patrol_index == -1:
