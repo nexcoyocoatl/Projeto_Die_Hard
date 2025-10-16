@@ -1,5 +1,3 @@
-# TODO: usar waypoints para pathfinding
-# TODO: Light2D para cone de visão
 extends Node2D
 
 @export var debug : bool = true

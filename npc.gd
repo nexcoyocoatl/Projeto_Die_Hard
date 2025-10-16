@@ -20,8 +20,9 @@ var player : CharacterBody2D = null
 @export var path : Path2D = null
 @export var mode : Mode = Mode.FOLLOW
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
-var patrol_path : Array = []
-var current_index : int
+var patrol_path : Array[Vector2i] = []
+var current_patrol_index : int = -1
+var last_player_position : Vector2i
 
 # Movement
 @export var tween_speed : float = 0.2
@@ -50,6 +51,9 @@ func _draw() -> void:
 	if (cone_polygon.size() > 3): # Só tenta desenhar se tem um polígono
 		if (alert):
 			draw_polygon(cone_polygon, [Color(130.0, 0.0, 0.0, 0.2)])
+			if mode == Mode.PATROL:
+				mode = Mode.FOLLOW
+			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 		else:
 			draw_polygon(cone_polygon, [Color(130.0, 130.0, 0.0, 0.2)])
 	
@@ -66,6 +70,10 @@ func _process(_delta) -> void:
 				cone_ray.rotation_degrees = 270
 				
 		create_cone()
+		if alert:
+			if mode == Mode.PATROL:
+				mode = Mode.FOLLOW
+			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	
 func receive_tilemap(tilemap : TileMapLayer) -> void:
 	self.tilemap_layer = tilemap
@@ -76,10 +84,6 @@ func receive_tilemap(tilemap : TileMapLayer) -> void:
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
 	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
 	pathfinding_grid.update()
-	if mode == Mode.PATROL: 
-		_generate_patrol_path()
-		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
-		current_index = find_closest_path_point(current_position)
 	
 	var used_cells : Dictionary[Vector2i, bool] = {}
 	for cell in tilemap_layer.get_used_cells():
@@ -107,7 +111,6 @@ func create_cone():
 	cone_polygon.append(cone_ray.position) # Posição do NPC
 	var original_rotation = cone_ray.rotation_degrees
 	var player_found : bool = false
-	var player_node : CharacterBody2D = get_tree().get_nodes_in_group("Player")[0]
 	
 	# Raycaster do ângulo de visão
 	for i in range(-cone_ray_angle, cone_ray_angle+1):
@@ -116,10 +119,10 @@ func create_cone():
 		if (cone_ray.is_colliding()):
 			var colliding_object = cone_ray.get_collider()
 			
-			if (!player_found and colliding_object == player_node):
+			if (!player_found and colliding_object == player):
 				player_found = true
 				alert = true
-				cone_ray.add_exception(player_node)
+				cone_ray.add_exception(player)
 				cone_ray.force_raycast_update()
 				if (cone_ray.is_colliding()):
 					cone_polygon.append(cone_ray.get_collision_point() - cone_ray.to_global(Vector2.ZERO))
@@ -131,7 +134,7 @@ func create_cone():
 		cone_polygon.append(cone_ray.to_global(cone_ray.target_position) - cone_ray.to_global(Vector2.ZERO))
 	
 	if (player_found):
-		cone_ray.remove_exception(player_node)
+		cone_ray.remove_exception(player)
 	else:
 		alert = false
 		
@@ -159,13 +162,17 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
-	if mode == Mode.FOLLOW: 
-		follow_player()
-	elif mode == Mode.PATROL:
-		if patrol_path.is_empty(): _generate_patrol_path()
-		var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
-		current_index = find_closest_path_point(current_position)
-		patrol()
+	match mode:
+		Mode.FOLLOW:
+			current_patrol_index = -1
+			follow_player()
+		Mode.PATROL: 
+			if patrol_path.is_empty():
+				_generate_patrol_path()
+			if current_patrol_index == -1:
+				var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+				current_patrol_index = find_closest_path_point(current_position)
+			patrol()
 
 func find_closest_path_point(given_position : Vector2i) -> int:
 	var closest_index: int = 0
@@ -183,14 +190,14 @@ func patrol() -> void:
 		return
 	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 	# se npc ainda não está no caminho de patrulha, vai até ele
-	if patrol_path.count(current_position) == 0:
-		current_index = find_closest_path_point(current_position)
-		go_towards_position(current_position, patrol_path[current_index])
+	if !patrol_path.has(current_position):
+		current_patrol_index = find_closest_path_point(current_position)
+		go_towards_position(current_position, patrol_path[current_patrol_index])
 		return
 	# chegou no caminho de patrulha, segue de onde está
-	if current_index == patrol_path.size() - 1: current_index = 1
-	else: current_index = (current_index + 1) % patrol_path.size()
-	var target: Vector2 = Vector2(patrol_path[current_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+	if current_patrol_index == patrol_path.size() - 1: current_patrol_index = 1
+	else: current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
+	var target: Vector2 = Vector2(patrol_path[current_patrol_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = get_tree().create_tween()
 	
 	# Facing direction
@@ -201,22 +208,27 @@ func patrol() -> void:
 
 func follow_player():
 	var current_position : Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
-	var player_position : Vector2i = (player.global_position / GlobalVariables.TILE_SIZE).floor()
+	if current_position == last_player_position:
+		mode = Mode.PATROL
 	# se player estiver fora do tilemap
-	if not pathfinding_grid.region.has_point(Vector2i(player_position)):
+	if not pathfinding_grid.region.has_point(Vector2i(last_player_position)):
 		move_finished()
 		return
-	go_towards_position(current_position, player_position)
+	go_towards_position(current_position, last_player_position)
 
 func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> void:
 	var path_to_position = pathfinding_grid.get_point_path(from_position, to_position)
 	line_path.points = path_to_position
+	var tween = create_tween()
 	if path_to_position.size() <= 1: # vazio ou só tem o tile do proprio npc
-		move_finished() 
+		# TODO: arrumar isso aqui
+		# é basicamente um tween fake para dar tempo do process desenhar o conde de visão
+		tween.tween_property(self, "global_position", global_position, tween_speed).set_trans(Tween.TRANS_SINE)
+		line_path.points = path_to_position
+		tween.tween_callback(move_finished)
 		return
 	path_to_position.remove_at(0)
 	var next_position : Vector2 = path_to_position[0] + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
-	var tween = create_tween()
 	
 	# Facing direction
 	change_direction((next_position - global_position).normalized())
