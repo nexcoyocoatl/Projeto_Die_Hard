@@ -93,14 +93,6 @@ func _process(_delta) -> void:
 				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
 		create_cone()
-		
-	# Troquei pra cá, pra tirar do desenho (aqui parece mais apropriado)
-	if (alert):
-		if mode == Mode.PATROL:
-			mode = Mode.FOLLOW
-			
-			# TODO: necessário?
-			#last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	
 func receive_tilemap(tilemap : TileMapLayer) -> void:
 	self.tilemap_layer = tilemap
@@ -110,6 +102,7 @@ func receive_tilemap(tilemap : TileMapLayer) -> void:
 	pathfinding_grid.region = tilemap_layer.get_used_rect()
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
 	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	pathfinding_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
 	pathfinding_grid.update()
 	if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
 	
@@ -250,24 +243,21 @@ func follow_player():
 
 func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> void:
 	var path_to_position = pathfinding_grid.get_point_path(from_position, to_position)
-	line_path.points = path_to_position
 	var tween = create_tween()
+	
 	if path_to_position.size() <= 1: # vazio ou só tem o tile do proprio npc
-		# TODO: arrumar isso aqui
-		# é basicamente um tween fake para dar tempo do process desenhar o conde de visão
-		tween.tween_property(self, "global_position", global_position, tween_speed).set_trans(Tween.TRANS_SINE)
-		line_path.points = path_to_position
+		tween.tween_interval(tween_speed) # cria delay para dar tempo do process desenhar conde de visão
 		tween.tween_callback(move_finished)
 		return
-	path_to_position.remove_at(0)
-	var next_position : Vector2 = path_to_position[0] + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+		
+	var next_position : Vector2 = path_to_position[1] + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	
 	# Facing direction
 	change_direction((next_position - global_position).normalized())
 	
 	tween.tween_property(self, "global_position", next_position, tween_speed).set_trans(Tween.TRANS_SINE)
-	line_path.points = path_to_position
 	tween.tween_callback(move_finished)
+	line_path.points = path_to_position
 
 func change_direction(move_direction: Vector2) -> void:
 	move_direction = move_direction
