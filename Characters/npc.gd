@@ -106,7 +106,7 @@ func receive_tilemap(tilemap : TileMapLayer) -> void:
 	pathfinding_grid.update()
 	if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
 	
-	var used_cells : Dictionary[Vector2i, bool] = {}
+	var used_cells : Dictionary = {}
 	for cell in tilemap_layer.get_used_cells():
 		used_cells[cell] = true
 		# Se tile tem colisão
