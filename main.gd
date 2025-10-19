@@ -113,7 +113,7 @@ func goto_scene(path: String):
 	add_child(current_scene)  
 	
 func _on_player_died():
-	print("Received death signal. Game over.")
+	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
 		get_tree().paused = true
 		var game_over_instance = game_over_scene.instantiate()

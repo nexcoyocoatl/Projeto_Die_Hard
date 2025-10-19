@@ -72,7 +72,7 @@ func move_false():
 func die():
 	if is_dead: return 
 	
-	print("The player died!")
+	if(GlobalVariables.DEBUG): print("The player died!")
 	is_dead = true
 	emit_signal("player_died") # Avisa que o jogador morreu
 	visible = false
