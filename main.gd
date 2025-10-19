@@ -106,7 +106,7 @@ func move_world():
 	get_tree().call_group("Npc", "receive_points")
 	
 func goto_scene(path: String):
-	current_scene.queue_free()
+	current_scene.free()
 	var new_scene : PackedScene = ResourceLoader.load(path)
 	current_scene = new_scene.instantiate()
 	#scene_limit = null # indica a troca de cena
