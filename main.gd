@@ -13,14 +13,21 @@ var action_points : int = 0
 var player_action_queue = []
 var world_moving : bool = false
 
+var current_scene = null
+
 func _ready() -> void:
 	world_moving = false
+	current_scene = $Level
 	pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
 
 # Ativa movimentos pelo input, que funciona por eventos de botões pressionados
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
+			if Input.is_action_pressed("reset"):
+				call_deferred("goto_scene", "res://level.tscn")
+				world_moving = false
+				resume_processing()
 			if (pause_time):
 				resume_processing() # Despausa em cada botão pressionado, caso necessário
 
@@ -92,3 +99,11 @@ func move_world():
 	awaiting_done_confirmation += 1 # player
 	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
+	
+func goto_scene(path: String):
+	current_scene.queue_free()
+	var new_scene : PackedScene = ResourceLoader.load(path)
+	current_scene = new_scene.instantiate()
+	#scene_limit = null # indica a troca de cena
+	add_child(current_scene)  
+	

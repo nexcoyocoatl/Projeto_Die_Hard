@@ -21,7 +21,7 @@ var player : CharacterBody2D = null
 @export var line_path : Line2D = null
 @export var path : Path2D = null
 @export var mode : Mode = Mode.FOLLOW
-var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
+var pathfinding_grid : AStarGrid2D
 var patrol_path : Array[Vector2i] = []
 var current_patrol_index : int = -1
 var last_player_position : Vector2i
@@ -94,38 +94,15 @@ func _process(_delta) -> void:
 					cone_ray.rotation_degrees = 270
 		create_cone()
 	
-func receive_tilemap(tilemap : TileMapLayer) -> void:
-	self.tilemap_layer = tilemap
-	# Pathfinding
-	# TODO: Mudar para o Game(main.gd) maior parte da lógica
-	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
-	pathfinding_grid.region = tilemap_layer.get_used_rect()
-	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
-	pathfinding_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	pathfinding_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	pathfinding_grid.update()
+func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
+	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)	
 	if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
-	
-	var used_cells : Dictionary = {}
-	for cell in tilemap_layer.get_used_cells():
-		used_cells[cell] = true
-		# Se tile tem colisão
-		if (tilemap_layer.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0):
-			# Esconde tile
-			tilemap_layer.get_cell_tile_data(cell).modulate.a = 0.0
-			# Põe no pathfinding grid como sólido
-			pathfinding_grid.set_point_solid(cell, true)
-
-	var region : Rect2i = pathfinding_grid.region
-	for y in range(region.position.y, region.position.y + region.size.y):
-		for x in range(region.position.x, region.position.x + region.size.x):
-			var cell : Vector2i = Vector2i(x, y)
-			if !used_cells.has(cell):
-				pathfinding_grid.set_point_solid(cell, true)
+	self.tilemap_layer = tilemap
+	self.pathfinding_grid = pathgrid
 	
 func receive_player_reference(_player: CharacterBody2D) -> void:
 	self.player = _player
-	
+
 # Cria polígono do cone de visão
 func create_cone():
 	cone_polygon.clear()

@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export_group("Animation and Movement")
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
 var tilemap_layer : TileMapLayer
+var pathfinding_grid : AStarGrid2D
 
 var input_direction : Vector2 = Vector2.ZERO				# Direção de movimento do jogador
 var moving : bool = false					# Se está movendo ou não
@@ -16,8 +17,9 @@ func _ready() -> void:
 	# Prende jogador ao centro do tile mais próximo (TODO: talvez mudar depois que o player puder receber o tilemap)
 	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 
-func receive_tilemap(tilemap : TileMapLayer) -> void:
+func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
 	self.tilemap_layer = tilemap
+	self.pathfinding_grid = pathgrid
 	
 func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
