@@ -66,6 +66,8 @@ var cooldown : int = 0
 @export_range(10,90) var cone_ray_angle_alert : int = 30
 var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
+# TODO: Adicionar uma outra variável que verifica se o NPC tem como atirar?
+# Do jeito que tá, ele pode atirar quando uma mínima parte do cone encosta no jogador
 var is_shooting : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
@@ -84,19 +86,18 @@ func _ready() -> void:
 func _draw() -> void:
 	# Desenha polígono do cone de visão
 	if (cone_polygon.size() > 3): # Só tenta desenhar se tem um polígono
-		if (alert):
+		if (is_shooting):
+			draw_polygon(cone_polygon, [Color(1.0, 0.0, 0.0, 0.2)])
+		elif (alert):
 			draw_polygon(cone_polygon, [Color(1.0, 0.7, 0.0, 0.2)])
 		elif (mode == Mode.FOLLOW):
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 0.0, 0.2)])
-		elif (is_shooting):
-			draw_polygon(cone_polygon, [Color(1.0, 0.0, 0.0, 0.2)])
 		else:
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 1.0, 0.2)])
 	
 func _process(_delta) -> void:
 	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
 	# Ou talvez por "som"?
-	print(is_shooting)
 	if (moving):				
 		if (alert):
 			cone_ray.look_at(player.position)
@@ -129,8 +130,13 @@ func _process(_delta) -> void:
 				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
 					
-		create_cone()
+		#create_cone()
 
+# Não pausa como o _process()
+# TODO: Ver como pausar e ainda ter o alerta funcionando até parar lógica e movimento
+func _physics_process(_delta: float) -> void:
+	create_cone()
+			
 # Cria polígono do cone de visão
 func create_cone():
 	cone_polygon.clear()
@@ -166,7 +172,14 @@ func create_cone():
 	if (player_found):
 		cone_ray.remove_exception(player)
 	else:
-		alert = false
+		# TODO: Ver como tirar isso tudo depois (senão ele troca o cone pra branco por alguns momentos)
+		# TODO: TAPA-BURACO
+		if (alert):
+			mode = Mode.FOLLOW
+			aiming_timer = 0
+			feedback_label.visible = false
+		
+		alert = false		
 		cone_ray_angle = cone_ray_angle_normal
 		
 	cone_ray.rotation_degrees = original_rotation
@@ -193,7 +206,7 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
-	create_cone() # Para ter certeza que o player não está mais na visão TODO: Fazer de outra forma?
+	#create_cone() # Para ter certeza que o player não está mais na visão TODO: Fazer de outra forma?
 	
 	match mode:
 		Mode.FOLLOW:
@@ -312,9 +325,12 @@ func aim_gun():
 func shoot():
 	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
 	feedback_label.visible = false
-	is_shooting = true # Ativa o cone vermelho (TODO: não funciona)
+	is_shooting = true # Ativa o cone vermelho
 	
 	player.die()
+	
+	var tween = create_tween()
+	tween.tween_callback(move_finished)
 
 func attack_melee():
 	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
