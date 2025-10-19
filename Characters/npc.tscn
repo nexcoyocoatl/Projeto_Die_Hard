@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://k2amkrrjelcl"]
+
+[ext_resource type="Script" uid="uid://clhpmdticle2" path="res://Characters/npc.gd" id="1_xxcha"]
+[ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="2_kh24r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7jktm"]
+size = Vector2(32, 32)
+
+[node name="Npc" type="CharacterBody2D" groups=["Npc"]]
+script = ExtResource("1_xxcha")
+mode = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_kh24r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_7jktm")
+
+[node name="ConeRay" type="RayCast2D" parent="."]
+visible = false
+target_position = Vector2(0, 224)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 48.0
+offset_top = -30.0
+offset_right = 88.0
+offset_bottom = -7.0
+horizontal_alignment = 1
+vertical_alignment = 1
