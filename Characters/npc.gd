@@ -261,7 +261,7 @@ func patrol() -> void:
 	if current_patrol_index == patrol_path.size() - 1: current_patrol_index = 1
 	else: current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
 	var target: Vector2 = Vector2(patrol_path[current_patrol_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
-	var tween = get_tree().create_tween()
+	var tween = create_tween()
 	
 	# Facing direction
 	change_direction((target - global_position).normalized())

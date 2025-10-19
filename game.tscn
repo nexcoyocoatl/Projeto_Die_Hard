@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bc5f8g0ubj3k3"]
+[gd_scene load_steps=4 format=3 uid="uid://bc5f8g0ubj3k3"]
 
 [ext_resource type="Script" uid="uid://eeirddr4r3aw" path="res://main.gd" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://db7t3hbot2qxq" path="res://level.tscn" id="2_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://yqdgis2x0ss0" path="res://game_over.tscn" id="2_fc0e3"]
-[ext_resource type="PackedScene" uid="uid://k2amkrrjelcl" path="res://Characters/npc.tscn" id="4_7jktm"]
 
 [node name="Game" type="Node2D" groups=["Game"]]
 process_mode = 3
@@ -11,10 +10,3 @@ script = ExtResource("1_e2o6t")
 game_over_scene = ExtResource("2_fc0e3")
 
 [node name="Level" parent="." instance=ExtResource("2_e2o6t")]
-
-[node name="Npc" parent="." instance=ExtResource("4_7jktm")]
-position = Vector2(83, 615)
-
-[node name="Npc" parent="Npc" instance=ExtResource("4_7jktm")]
-position = Vector2(1379, 70)
-npc_type = 1
