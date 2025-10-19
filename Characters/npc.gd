@@ -9,7 +9,7 @@ enum NpcType{
 enum Mode {
 	PATROL,
 	FOLLOW,
-	AIMING, 
+	AIMING,
 	ATTACKING
 }
 
@@ -40,12 +40,12 @@ var last_player_position : Vector2i
 
 #Combat
 @export_group("Combat")
-@export_category("Shooter")
-@export var time_to_shoot : int = 3 # Turnos que o shooter leva para atirar
-@export var vision_range_ranged : int = 7 # Distância do cone de visão
-@export_category("fighter")
-@export var detection_fighter : int = 7 # Distância que o fighter vê
+@export_subgroup("Shooter")
+# TODO: Trocar pra 3 quando estiver consertado o delay do tiro
+@export var time_to_shoot : int = 3 + 2 # Turnos que o shooter leva para atirar
+@export_subgroup("Fighter")
 @export var attack_range_melee : float = 1.5 # Distância que o fighter ataca (adjacentes)
+var distance_to_player
 var aiming_timer : int = 0
 @onready var feedback_label = get_node_or_null("Label") 
 
@@ -72,14 +72,14 @@ var cone_polygon : PackedVector2Array = []
 
 func _ready() -> void:
 	# Vision Cone
-	cone_ray = get_node_or_null("ConeRay")
-	feedback_label = get_node_or_null("Label") 
-	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE 
-	cone_ray_dist = vision_range_ranged * GlobalVariables.TILE_SIZE # variável de alcance em tiles
+	cone_ray = $ConeRay
+	feedback_label = $Label
+	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
+	cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
 	cone_ray.target_position = Vector2(0,cone_ray_dist)
-	cone_ray.collide_with_areas = true # Colide com areas2d também 
+	cone_ray.collide_with_areas = true # Colide com areas2d também
 	if feedback_label:
-		feedback_label.visible = false  
+		feedback_label.visible = false
 	
 func _draw() -> void:
 	# Desenha polígono do cone de visão
@@ -96,18 +96,27 @@ func _draw() -> void:
 func _process(_delta) -> void:
 	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
 	# Ou talvez por "som"?
-	
-	if (moving):
+	if (moving):				
 		if (alert):
 			cone_ray.look_at(player.position)
 			
 			# Pra ajustar o look_at que fica "torto" 90 graus
 			# (TODO: não é necessário, mas talvez ver como arrumar)
 			cone_ray.rotation_degrees -= 90
+			distance_to_player = global_position.distance_to(player.global_position) / GlobalVariables.TILE_SIZE
 			
-			if mode == Mode.PATROL:
-				mode = Mode.FOLLOW
+			if npc_type == NpcType.FIGHTER: # Se for Lutador, verifique se está perto o suficiente para atacar.
+				if distance_to_player <= attack_range_melee:
+					mode = Mode.ATTACKING
+			
+			if (mode == Mode.PATROL or mode == Mode.FOLLOW):
+				if (npc_type == NpcType.SHOOTER):
+					mode = Mode.AIMING
+				else:
+					mode = Mode.FOLLOW
+				
 			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
+			
 		else:
 			match direction:
 				Direction.UP:
@@ -118,6 +127,7 @@ func _process(_delta) -> void:
 					cone_ray.rotation_degrees = 90
 				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
+					
 		create_cone()
 
 # Cria polígono do cone de visão
@@ -136,6 +146,9 @@ func create_cone():
 			
 			if (!player_found and colliding_object == player):
 				player_found = true
+				
+				# TODO: fazer alerta no _process, talvez com outro raycast para parar o alerta
+				# antes de contar +1 no tempo
 				alert = true
 				cone_ray_angle = cone_ray_angle_alert
 				cone_ray.add_exception(player)
@@ -179,22 +192,13 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
-	if mode == Mode.FOLLOW and alert:
-		var distance_to_player = global_position.distance_to(player.global_position) / GlobalVariables.TILE_SIZE
-		if npc_type == NpcType.SHOOTER: # Se for Atirador, pare de seguir e comece a mirar.
-			mode = Mode.AIMING
-			aiming_timer = 0
-
-		elif npc_type == NpcType.FIGHTER: # Se for Lutador, verifique se está perto o suficiente para atacar.
-			if distance_to_player <= attack_range_melee:
-				mode = Mode.ATTACKING
+	
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
 			current_patrol_index = -1
 			follow_player()
-
-		Mode.PATROL: 
+		Mode.PATROL:
 			cone_ray.target_position = Vector2(0,cone_ray_dist)
 			if patrol_path.is_empty():
 				_generate_patrol_path()
@@ -202,29 +206,9 @@ func receive_points():
 				var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 				current_patrol_index = find_closest_path_point(current_position)
 			patrol()
-
 		Mode.AIMING:
-			if cone_ray:
-				cone_ray_angle = cone_ray_angle_alert
-				cone_ray.target_position = Vector2(0, cone_ray_dist_alert)
-
-			if alert: # O jogador ainda está na mira?
-				aiming_timer += 1
-				if feedback_label:
-					feedback_label.text = str(time_to_shoot - aiming_timer)
-					feedback_label.visible = true
-
-				if aiming_timer >= time_to_shoot:
-					shoot() # Atira
-				else:
-					move_finished() # Fica parado
-
-			else: # O jogador fugiu da mira
-				if feedback_label:
-					feedback_label.visible = false
-				mode = Mode.FOLLOW # Volte a perseguir
-				receive_points()
-
+			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
+			aim_gun()
 		Mode.ATTACKING:
 			attack_melee()
 
@@ -303,21 +287,38 @@ func move_finished() -> void:
 	moving = false
 	if (GlobalVariables.DEBUG): print(self.name, " stops moving")
 	get_tree().call_group("Game", "child_done_confirmation")
+	
+func aim_gun():
+	if (alert):
+		aiming_timer += 1
+	
+		feedback_label.text = str(time_to_shoot - aiming_timer)
+		feedback_label.visible = true
+		
+		if aiming_timer >= time_to_shoot:
+			shoot() # Atira
+			
+	else:
+		aiming_timer = 0
+		feedback_label.visible = false
+		mode = Mode.FOLLOW
+	
+	# TODO: Tapa-buraco (trocar para uma forma de chamar direto o move_finished sem necessidade de delay?)
+	var tween = create_tween()
+	tween.tween_callback(move_finished)
 
 func shoot():
-	print("NPC SHOOTER: FIRE!")
-	if feedback_label: feedback_label.visible = false
-	is_shooting = true # Ativa o cone vermelho
+	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
+	feedback_label.visible = false
+	is_shooting = true # Ativa o cone vermelho (TODO: não funciona)
 	
-	if player and player.has_method("die"):
-		player.die()
+	player.die()
 	
 	move_finished()
 
 func attack_melee():
-	print("NPC FIGHTER: ATTACK!")
+	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
 	
-	if player and player.has_method("die"):
-		player.die()
+	player.die()
 		
 	move_finished()
