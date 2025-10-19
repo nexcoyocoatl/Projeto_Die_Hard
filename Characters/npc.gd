@@ -42,7 +42,7 @@ var last_player_position : Vector2i
 @export_group("Combat")
 @export_subgroup("Shooter")
 # TODO: Trocar pra 3 quando estiver consertado o delay do tiro
-@export var time_to_shoot : int = 3 + 2 # Turnos que o shooter leva para atirar
+@export var time_to_shoot : int = 3 + 1 # Turnos que o shooter leva para atirar
 @export_subgroup("Fighter")
 @export var attack_range_melee : float = 1.5 # Distância que o fighter ataca (adjacentes)
 var distance_to_player
@@ -96,6 +96,7 @@ func _draw() -> void:
 func _process(_delta) -> void:
 	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
 	# Ou talvez por "som"?
+	print(is_shooting)
 	if (moving):				
 		if (alert):
 			cone_ray.look_at(player.position)
@@ -192,6 +193,7 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
+	create_cone() # Para ter certeza que o player não está mais na visão TODO: Fazer de outra forma?
 	
 	match mode:
 		Mode.FOLLOW:
@@ -295,7 +297,7 @@ func aim_gun():
 		feedback_label.text = str(time_to_shoot - aiming_timer)
 		feedback_label.visible = true
 		
-		if aiming_timer >= time_to_shoot:
+		if aiming_timer > time_to_shoot:
 			shoot() # Atira
 			
 	else:
@@ -313,8 +315,6 @@ func shoot():
 	is_shooting = true # Ativa o cone vermelho (TODO: não funciona)
 	
 	player.die()
-	
-	move_finished()
 
 func attack_melee():
 	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
