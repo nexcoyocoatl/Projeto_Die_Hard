@@ -5,7 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_1ainy"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
-[ext_resource type="PackedScene" uid="uid://k2amkrrjelcl" path="res://Characters/npc.tscn" id="5_i2t4f"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -52,6 +51,12 @@ _data = {
 }
 point_count = 5
 
+[sub_resource type="Curve2D" id="Curve2D_f2txt"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 880, 80, 0, 0, 0, 0, 880, 368, 0, 0, 0, 0, 880, 80)
+}
+point_count = 3
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ryrav"]
 size = Vector2(64, 128)
 
@@ -71,14 +76,11 @@ drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
-[node name="Npc" parent="." node_paths=PackedStringArray("line_path", "path") instance=ExtResource("5_i2t4f")]
-position = Vector2(432, 240)
-platform_floor_layers = 4294967041
-line_path = NodePath("../Line2D")
-path = NodePath("../Path1")
-
-[node name="Path1" type="Path2D" parent="."]
+[node name="Path1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_fc0e3")
+
+[node name="Path2D" type="Path2D" parent="." groups=["Paths"]]
+curve = SubResource("Curve2D_f2txt")
 
 [node name="Line2D" type="Line2D" parent="."]
 points = PackedVector2Array(-40, -32)

@@ -3,7 +3,7 @@ extends Node
 var logical_tilemap : TileMapLayer
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
 
-func create_pathgrid():
+func init_pathgrid():
 	# Pathfinding
 	pathfinding_grid.region = logical_tilemap.get_used_rect()
 	pathfinding_grid.cell_size = Vector2(GlobalVariables.TILE_SIZE, GlobalVariables.TILE_SIZE)
@@ -30,8 +30,24 @@ func create_pathgrid():
 
 func _ready() -> void:
 	logical_tilemap = $Level1_LogicalTileMap
-	create_pathgrid()
-	get_tree().call_group("Player", "receive_tilemap", logical_tilemap, pathfinding_grid)
-	get_tree().call_group("Npc", "receive_tilemap", logical_tilemap, pathfinding_grid)
-	# Passa referencia do player para os npcs. Analisar se pode passar só a posição
-	get_tree().call_group("Npc", "receive_player_reference", get_tree().get_nodes_in_group("Player")[0])
+	init_pathgrid()
+	var npcScene = preload("res://Characters/npc.tscn")
+	var player : Player = get_tree().get_nodes_in_group("Player")[0]
+	player.tilemap_layer = logical_tilemap
+	# Cria npcs no inicio dos paths
+	for path : Path2D in get_tree().get_nodes_in_group("Paths"):
+		var line_path = Line2D.new()
+		line_path.default_color = Color.RED
+		line_path.width = 1
+		line_path.position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+		if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
+		add_child(line_path)
+		
+		var npc: Npc = npcScene.instantiate()
+		npc.line_path = line_path
+		npc.path = path
+		npc.player = player
+		npc.tilemap_layer = logical_tilemap
+		npc.pathfinding_grid = pathfinding_grid
+		add_child(npc)
+		npc.position = npc.path.curve.get_point_position(0)

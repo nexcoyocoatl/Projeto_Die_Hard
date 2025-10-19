@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Npc
 
 enum NpcType{
 	SHOOTER, 
@@ -118,15 +119,6 @@ func _process(_delta) -> void:
 				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
 		create_cone()
-	
-func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
-	line_path.global_position = Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)	
-	if (!GlobalVariables.DEBUG): line_path.modulate.a = 0.0
-	self.tilemap_layer = tilemap
-	self.pathfinding_grid = pathgrid
-	
-func receive_player_reference(_player: CharacterBody2D) -> void:
-	self.player = _player
 
 # Cria polígono do cone de visão
 func create_cone():
@@ -196,7 +188,6 @@ func receive_points():
 		elif npc_type == NpcType.FIGHTER: # Se for Lutador, verifique se está perto o suficiente para atacar.
 			if distance_to_player <= attack_range_melee:
 				mode = Mode.ATTACKING
-				
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
