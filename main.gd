@@ -4,7 +4,8 @@ extends Node2D
 @export_group("Time and Movement")
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
-@export_group("Scenes")
+@export_group("Scenes") 
+@export var game_over_scene: PackedScene 
 
 var input_direction : Vector2				# Direção de movimento do jogador
 var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movimento
@@ -19,6 +20,9 @@ func _ready() -> void:
 	world_moving = false
 	current_scene = $Level
 	pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
+	var player = get_tree().get_nodes_in_group("Player")[0]
+	if player:
+		player.player_died.connect(_on_player_died)
 
 # Ativa movimentos pelo input, que funciona por eventos de botões pressionados
 func _input(event: InputEvent) -> void:
@@ -108,3 +112,11 @@ func goto_scene(path: String):
 	#scene_limit = null # indica a troca de cena
 	add_child(current_scene)  
 	
+func _on_player_died():
+	print("Received death signal. Game over.")
+	if game_over_scene:
+		get_tree().paused = true
+		var game_over_instance = game_over_scene.instantiate()
+		add_child(game_over_instance)
+	else:
+		get_tree().reload_current_scene()

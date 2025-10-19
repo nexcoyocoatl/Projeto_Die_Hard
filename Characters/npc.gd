@@ -1,8 +1,15 @@
 extends CharacterBody2D
 
+enum NpcType{
+	SHOOTER, 
+	FIGHTER	
+}
+
 enum Mode {
 	PATROL,
-	FOLLOW
+	FOLLOW,
+	AIMING, 
+	ATTACKING
 }
 
 enum Direction {
@@ -26,6 +33,21 @@ var patrol_path : Array[Vector2i] = []
 var current_patrol_index : int = -1
 var last_player_position : Vector2i
 
+#Behavior 
+@export_group("Behavior") 
+@export var npc_type : NpcType = NpcType.SHOOTER #Aqui se escolhe o tipo do NPC
+
+#Combat
+@export_group("Combat")
+@export_category("Shooter")
+@export var time_to_shoot : int = 3 # Turnos que o shooter leva para atirar
+@export var vision_range_ranged : int = 7 # Distância do cone de visão
+@export_category("fighter")
+@export var detection_fighter : int = 7 # Distância que o fighter vê
+@export var attack_range_melee : float = 1.5 # Distância que o fighter ataca (adjacentes)
+var aiming_timer : int = 0
+@onready var feedback_label = get_node_or_null("Label") 
+
 # Movement
 @export_group("Animation and Movement")
 @export var tween_speed : float = 0.2
@@ -43,17 +65,20 @@ var cooldown : int = 0
 @export_range(10,90) var cone_ray_angle_alert : int = 30
 var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
-var shoot : bool = false	# Quando atira (cone fica vermelho)
+var is_shooting : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
 func _ready() -> void:
 	# Vision Cone
-	cone_ray = $ConeRay
-	cone_ray_dist *= GlobalVariables.TILE_SIZE
-	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
+	cone_ray = get_node_or_null("ConeRay")
+	feedback_label = get_node_or_null("Label") 
+	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE 
+	cone_ray_dist = vision_range_ranged * GlobalVariables.TILE_SIZE # variável de alcance em tiles
 	cone_ray.target_position = Vector2(0,cone_ray_dist)
-	cone_ray.collide_with_areas = true # Colide com areas2d também
+	cone_ray.collide_with_areas = true # Colide com areas2d também 
+	if feedback_label:
+		feedback_label.visible = false  
 	
 func _draw() -> void:
 	# Desenha polígono do cone de visão
@@ -62,7 +87,7 @@ func _draw() -> void:
 			draw_polygon(cone_polygon, [Color(1.0, 0.7, 0.0, 0.2)])
 		elif (mode == Mode.FOLLOW):
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 0.0, 0.2)])
-		elif (shoot):
+		elif (is_shooting):
 			draw_polygon(cone_polygon, [Color(1.0, 0.0, 0.0, 0.2)])
 		else:
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 1.0, 0.2)])
@@ -162,11 +187,22 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
+	if mode == Mode.FOLLOW and alert:
+		var distance_to_player = global_position.distance_to(player.global_position) / GlobalVariables.TILE_SIZE
+		if npc_type == NpcType.SHOOTER: # Se for Atirador, pare de seguir e comece a mirar.
+			mode = Mode.AIMING
+			aiming_timer = 0
+
+		elif npc_type == NpcType.FIGHTER: # Se for Lutador, verifique se está perto o suficiente para atacar.
+			if distance_to_player <= attack_range_melee:
+				mode = Mode.ATTACKING
+				
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
 			current_patrol_index = -1
 			follow_player()
+
 		Mode.PATROL: 
 			cone_ray.target_position = Vector2(0,cone_ray_dist)
 			if patrol_path.is_empty():
@@ -175,6 +211,31 @@ func receive_points():
 				var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 				current_patrol_index = find_closest_path_point(current_position)
 			patrol()
+
+		Mode.AIMING:
+			if cone_ray:
+				cone_ray_angle = cone_ray_angle_alert
+				cone_ray.target_position = Vector2(0, cone_ray_dist_alert)
+
+			if alert: # O jogador ainda está na mira?
+				aiming_timer += 1
+				if feedback_label:
+					feedback_label.text = str(time_to_shoot - aiming_timer)
+					feedback_label.visible = true
+
+				if aiming_timer >= time_to_shoot:
+					shoot() # Atira
+				else:
+					move_finished() # Fica parado
+
+			else: # O jogador fugiu da mira
+				if feedback_label:
+					feedback_label.visible = false
+				mode = Mode.FOLLOW # Volte a perseguir
+				receive_points()
+
+		Mode.ATTACKING:
+			attack_melee()
 
 func find_closest_path_point(given_position : Vector2i) -> int:
 	var closest_index: int = 0
@@ -251,3 +312,21 @@ func move_finished() -> void:
 	moving = false
 	if (GlobalVariables.DEBUG): print(self.name, " stops moving")
 	get_tree().call_group("Game", "child_done_confirmation")
+
+func shoot():
+	print("NPC SHOOTER: FIRE!")
+	if feedback_label: feedback_label.visible = false
+	is_shooting = true # Ativa o cone vermelho
+	
+	if player and player.has_method("die"):
+		player.die()
+	
+	move_finished()
+
+func attack_melee():
+	print("NPC FIGHTER: ATTACK!")
+	
+	if player and player.has_method("die"):
+		player.die()
+		
+	move_finished()

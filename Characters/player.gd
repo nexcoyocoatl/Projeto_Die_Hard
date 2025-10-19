@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+signal player_died
+var is_dead: bool = false
+
 @export_category("Script Exports")
 @export_group("Animation and Movement")
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
@@ -64,3 +67,12 @@ func move_false():
 	if action_points <= 0:
 		if (GlobalVariables.DEBUG): print("Player stops moving")
 		get_tree().call_group("Game", "child_done_confirmation")
+
+func die():
+	if is_dead: return 
+	
+	print("The player died!")
+	is_dead = true
+	emit_signal("player_died") # Avisa que o jogador morreu
+	visible = false
+	set_physics_process(false) # Para o _physics_process de processar movimentos
