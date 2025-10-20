@@ -96,7 +96,8 @@ func child_done_confirmation() -> void:
 # Função para parar todos movimentos (é chamada quando recebe confirmação de todos filhos que pararam as ações)
 func stop_world():
 	# TODO: VER FORMA DE ESPERAR TUDO PARAR ANTES DE PAUSAR
-	pause_processing()
+	#pause_processing()
+	pass
 
 # Função para chamar todos filhos Movable para executarem um movimento
 func move_world():
