@@ -159,6 +159,10 @@ func create_cone():
 		if (cone_ray.is_colliding()):
 			var colliding_object = cone_ray.get_collider()
 			
+			# TODO: Temporário pra evitar o LevelEnd como obstáculo de visão
+			if (colliding_object.name.contains("LevelEnd")):
+				cone_ray.add_exception(colliding_object)
+			
 			if (!player_found and colliding_object == player):
 				player_found = true
 				
