@@ -1,19 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://yqdgis2x0ss0"]
+[gd_scene load_steps=6 format=3 uid="uid://byswx385ptq7x"]
 
-[ext_resource type="Texture2D" uid="uid://cydeuij3drxhk" path="res://Textures/GameOver.png" id="1_y26ei"]
-[ext_resource type="Script" uid="uid://cjc7n1u7mqbao" path="res://game_over.gd" id="1_yxx3c"]
+[ext_resource type="Script" uid="uid://bhpuno7c5un2s" path="res://Screens/you_win.gd" id="1_vkac0"]
+[ext_resource type="Texture2D" uid="uid://cqxrda56rlq0q" path="res://Textures/YouWin.png" id="1_w5032"]
 
-[sub_resource type="Animation" id="Animation_y26ei"]
-resource_name = "GameOver"
-length = 10.001
+[sub_resource type="Animation" id="Animation_w5032"]
+resource_name = "NextLevel"
+length = 10.047
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/path = NodePath("../..:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.1, 0.4),
+"times": PackedFloat32Array(0, 0.366667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -21,22 +21,22 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CenterContainer/VBoxContainer:modulate")
+tracks/1/path = NodePath("..:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.166667, 1.7),
+"times": PackedFloat32Array(0.233333, 1.96667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_yxx3c"]
+[sub_resource type="Animation" id="Animation_vkac0"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:modulate")
+tracks/0/path = NodePath("../..:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -48,7 +48,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("CenterContainer/VBoxContainer:modulate")
+tracks/1/path = NodePath("..:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -58,64 +58,55 @@ tracks/1/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ccer4"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rlycu"]
 _data = {
-&"GameOver": SubResource("Animation_y26ei"),
-&"RESET": SubResource("Animation_yxx3c")
+&"NextLevel": SubResource("Animation_w5032"),
+&"RESET": SubResource("Animation_vkac0")
 }
 
-[node name="GameOver" type="Control"]
+[node name="YouWin" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_yxx3c")
+script = ExtResource("1_vkac0")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0486885, 0.171553, 0.153316, 1)
+color = Color(0.0470588, 0.172549, 0.152941, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -333.5
-offset_top = -241.0
-offset_right = 333.5
-offset_bottom = 241.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
 
-[node name="GameOver_Title" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+[node name="YouWin_Title" type="TextureRect" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("1_y26ei")
+texture = ExtResource("1_w5032")
 
-[node name="Restart_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="NextLevel_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
 modulate = Color(1, 0, 0.0627451, 1)
-self_modulate = Color(0.947406, 3.77826e-06, 1.73271e-06, 0.705882)
+self_modulate = Color(0.94902, 0, 0, 0.705882)
 texture_filter = 3
 texture_repeat = 3
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-localize_numeral_system = false
-theme_override_font_sizes/font_size = 30
-text = "Restart"
-icon_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "Next Level"
 
 [node name="Quit_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
 modulate = Color(1, 0, 0.0627451, 1)
@@ -125,15 +116,15 @@ texture_repeat = 3
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 20
 text = "Quit"
 
 [node name="Animation" type="AnimationPlayer" parent="CenterContainer"]
-root_node = NodePath("../..")
+root_node = NodePath("../VBoxContainer/NextLevel_Btn")
 libraries = {
-&"": SubResource("AnimationLibrary_ccer4")
+&"": SubResource("AnimationLibrary_rlycu")
 }
-autoplay = "GameOver"
+autoplay = "NextLevel"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Restart_Btn" to="." method="_on_restart_btn_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/NextLevel_Btn" to="." method="_on_next_level_btn_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Quit_Btn" to="." method="_on_quit_btn_pressed"]
