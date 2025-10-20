@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://yqdgis2x0ss0"]
 
-[ext_resource type="Texture2D" uid="uid://cg64sm7wd7c58" path="res://Textures/GameOver.png" id="1_y26ei"]
+[ext_resource type="Texture2D" uid="uid://cydeuij3drxhk" path="res://Textures/GameOver.png" id="1_y26ei"]
 [ext_resource type="Script" uid="uid://cjc7n1u7mqbao" path="res://game_over.gd" id="1_yxx3c"]
 
 [sub_resource type="Animation" id="Animation_y26ei"]
@@ -13,7 +13,7 @@ tracks/0/path = NodePath("ColorRect:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.1, 0.4000001),
+"times": PackedFloat32Array(0.1, 0.4),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -25,7 +25,7 @@ tracks/1/path = NodePath("CenterContainer/VBoxContainer:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.16666675, 1.6999998),
+"times": PackedFloat32Array(0.166667, 1.7),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -85,11 +85,17 @@ color = Color(0.0486885, 0.171553, 0.153316, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.57900006
-anchor_bottom = 0.74100006
-offset_right = -627.00806
-offset_bottom = -440.16803
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -333.5
+offset_top = -241.0
+offset_right = 333.5
+offset_bottom = 241.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
