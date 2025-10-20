@@ -53,12 +53,6 @@ sources/0 = SubResource("TileSetAtlasSource_eow3j")
 sources/3 = SubResource("TileSetAtlasSource_j5wjh")
 sources/4 = SubResource("TileSetAtlasSource_km5ld")
 
-[sub_resource type="Curve2D" id="Curve2D_fc0e3"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 16, 368, 0, 0, 0, 0, 16, 400)
-}
-point_count = 2
-
 [sub_resource type="Curve2D" id="Curve2D_n6hdu"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 1168, 816, 0, 0, 0, 0, 1168, 1008, 0, 0, 0, 0, 48, 1008, 0, 0, 0, 0, 48, 816, 0, 0, 0, 0, 48, 1008, 0, 0, 0, 0, 1168, 1008, 0, 0, 0, 0, 1168, 816)
@@ -70,6 +64,12 @@ _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 48, 1200, 0, 0, 0, 0, 48, 1040, 0, 0, 0, 0, 1168, 1040, 0, 0, 0, 0, 1168, 1200, 0, 0, 0, 0, 1168, 1040, 0, 0, 0, 0, 48, 1040, 0, 0, 0, 0, 48, 1200)
 }
 point_count = 7
+
+[sub_resource type="Curve2D" id="Curve2D_42xju"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 16, 368, 0, 0, 0, 0, 16, 400)
+}
+point_count = 2
 
 [sub_resource type="Curve2D" id="Curve2D_i2t4f"]
 _data = {
@@ -153,10 +153,6 @@ drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
-[node name="Shooter1" type="Path2D" parent="." groups=["Paths"]]
-position = Vector2(0, 32)
-curve = SubResource("Curve2D_fc0e3")
-
 [node name="Line2D" type="Line2D" parent="."]
 points = PackedVector2Array(-40, -32)
 width = 1.0
@@ -170,6 +166,9 @@ curve = SubResource("Curve2D_n6hdu")
 
 [node name="Fighter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_km5ld")
+
+[node name="Shooter1" type="Path2D" parent="." groups=["Paths"]]
+curve = SubResource("Curve2D_42xju")
 
 [node name="Shooter2" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_i2t4f")
