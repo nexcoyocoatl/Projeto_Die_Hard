@@ -81,10 +81,10 @@ drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
-[node name="Path1" type="Path2D" parent="." groups=["Paths"]]
+[node name="Shooter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_fc0e3")
 
-[node name="Path2D" type="Path2D" parent="." groups=["Paths"]]
+[node name="Fighter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_f2txt")
 
 [node name="Line2D" type="Line2D" parent="."]

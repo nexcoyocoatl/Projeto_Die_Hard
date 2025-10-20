@@ -36,7 +36,7 @@ var last_player_position : Vector2i
 
 #Behavior 
 @export_group("Behavior") 
-@export var npc_type : NpcType = NpcType.SHOOTER #Aqui se escolhe o tipo do NPC
+@export var npc_type : NpcType #Aqui se escolhe o tipo do NPC
 
 #Combat
 @export_group("Combat")
@@ -45,7 +45,7 @@ var last_player_position : Vector2i
 @export var time_to_shoot : int = 3 + 1 # Turnos que o shooter leva para atirar
 @export_subgroup("Fighter")
 @export var attack_range_melee : float = 1.5 # Distância que o fighter ataca (adjacentes)
-var distance_to_player
+var distance_to_player : float
 var aiming_timer : int = 0
 @onready var feedback_label = get_node_or_null("Label") 
 
@@ -73,6 +73,14 @@ var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
 func _ready() -> void:
+	# TODO: Temporário? (ver outra forma, talvez?)
+	if (path.name.contains("Shooter")):
+		npc_type = NpcType.SHOOTER
+		$Sprite2D.modulate = Color(1.0, 0.47, 0.47, 1.0)
+	elif (path.name.contains("Fighter")):
+		npc_type = NpcType.FIGHTER
+		$Sprite2D.modulate = Color(0.85, 1.0, 0.47, 1.0)
+	
 	# Vision Cone
 	cone_ray = $ConeRay
 	feedback_label = $Label
@@ -172,8 +180,8 @@ func create_cone():
 	if (player_found):
 		cone_ray.remove_exception(player)
 	else:
-		# TODO: Ver como tirar isso tudo depois (senão ele troca o cone pra branco por alguns momentos)
-		# TODO: TAPA-BURACO
+		# TODO: TEMPORÁRIO
+		# Ver como tirar isso tudo depois (senão ele troca o cone pra branco por alguns momentos)
 		if (alert):
 			mode = Mode.FOLLOW
 			aiming_timer = 0
@@ -206,8 +214,7 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
-	#create_cone() # Para ter certeza que o player não está mais na visão TODO: Fazer de outra forma?
-	
+
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
@@ -318,7 +325,7 @@ func aim_gun():
 		feedback_label.visible = false
 		mode = Mode.FOLLOW
 	
-	# TODO: Tapa-buraco (trocar para uma forma de chamar direto o move_finished sem necessidade de delay?)
+	# TODO: Temporário (trocar para alternativa de chamar direto o move_finished sem necessidade de delay?)
 	var tween = create_tween()
 	tween.tween_callback(move_finished)
 
@@ -329,6 +336,7 @@ func shoot():
 	
 	player.die()
 	
+	# TODO: Temporário
 	var tween = create_tween()
 	tween.tween_callback(move_finished)
 
@@ -336,5 +344,7 @@ func attack_melee():
 	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
 	
 	player.die()
-		
-	move_finished()
+	
+	# TODO: Temporário
+	var tween = create_tween()
+	tween.tween_callback(move_finished)
