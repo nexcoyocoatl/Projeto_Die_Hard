@@ -29,9 +29,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
-				call_deferred("goto_scene", "res://level.tscn")
-				world_moving = false
-				return
+				get_tree().change_scene_to_file.call_deferred("res://game.tscn")
 				
 			if (pause_time):
 				resume_processing() # Despausa em cada botão pressionado, caso necessário
