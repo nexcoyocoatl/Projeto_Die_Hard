@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
-[ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Screens/level_end.tscn" id="6_1ainy"]
+[ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
