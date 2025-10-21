@@ -114,6 +114,6 @@ func goto_scene(path: String):
 func _on_player_died():
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
-		get_tree().change_scene_to_file.call_deferred("res://Screens/game_over.tscn")
+		get_tree().root.add_child.call_deferred(game_over_scene.instantiate())
 	else:
 		get_tree().reload_current_scene()

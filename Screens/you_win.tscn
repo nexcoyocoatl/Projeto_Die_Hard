@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://byswx385ptq7x"]
+[gd_scene load_steps=6 format=3 uid="uid://byl12jyi573aa"]
 
 [ext_resource type="Script" uid="uid://bhpuno7c5un2s" path="res://Screens/you_win.gd" id="1_vkac0"]
-[ext_resource type="Texture2D" uid="uid://cqxrda56rlq0q" path="res://Textures/YouWin.png" id="1_w5032"]
+[ext_resource type="Texture2D" uid="uid://b17x6h6b0kgyr" path="res://Textures/YouWin.png" id="1_w5032"]
 
 [sub_resource type="Animation" id="Animation_w5032"]
 resource_name = "NextLevel"
@@ -9,11 +9,11 @@ length = 10.047
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../..:modulate")
+tracks/0/path = NodePath("..:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.366667),
+"times": PackedFloat32Array(0.3, 0.6),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -21,14 +21,14 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("..:modulate")
+tracks/1/path = NodePath("../../../ColorRect:color")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.233333, 1.96667),
+"times": PackedFloat32Array(0.0666667, 0.366667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Color(0.0470588, 0.121569, 0.0862745, 0), Color(0.0470588, 0.121569, 0.0862745, 0.580392)]
 }
 
 [sub_resource type="Animation" id="Animation_vkac0"]
@@ -36,7 +36,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("../..:modulate")
+tracks/0/path = NodePath("..:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -48,14 +48,14 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("..:modulate")
+tracks/1/path = NodePath("../../../ColorRect:color")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(0.0470588, 0.121569, 0.0862745, 0.713726)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_rlycu"]
@@ -64,26 +64,18 @@ _data = {
 &"RESET": SubResource("Animation_vkac0")
 }
 
-[node name="YouWin" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="YouWin" type="CanvasLayer"]
 script = ExtResource("1_vkac0")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0470588, 0.172549, 0.152941, 1)
+color = Color(0.0470588, 0.121569, 0.0862745, 0.713726)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
