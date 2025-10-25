@@ -3,7 +3,7 @@ class_name Npc
 
 enum NpcType{
 	SHOOTER, 
-	FIGHTER	
+	FIGHTER
 }
 
 enum Mode {
@@ -106,7 +106,7 @@ func _draw() -> void:
 func _process(_delta) -> void:
 	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
 	# Ou talvez por "som"?
-	if (moving):				
+	if (moving):
 		if (alert):
 			cone_ray.look_at(player.position)
 			
@@ -144,7 +144,7 @@ func _process(_delta) -> void:
 # TODO: Ver como pausar e ainda ter o alerta funcionando até parar lógica e movimento
 func _physics_process(_delta: float) -> void:
 	create_cone()
-			
+
 # Cria polígono do cone de visão
 func create_cone():
 	cone_polygon.clear()
@@ -191,7 +191,7 @@ func create_cone():
 			aiming_timer = 0
 			feedback_label.visible = false
 		
-		alert = false		
+		alert = false
 		cone_ray_angle = cone_ray_angle_normal
 		
 	cone_ray.rotation_degrees = original_rotation
@@ -352,3 +352,8 @@ func attack_melee():
 	# TODO: Temporário
 	var tween = create_tween()
 	tween.tween_callback(move_finished)
+	
+## faz npc olhar para o player
+func detect_player():
+	cone_ray.look_at(player.global_position)
+	cone_ray.rotation_degrees -= 90

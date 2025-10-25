@@ -17,9 +17,18 @@ var moving : bool = false					# Se está movendo ou não
 var action_queue = []
 var action_points = 0
 
+@onready var noise : Area2D = $Noise
+
 func _ready() -> void:
 	# Prende jogador ao centro do tile mais próximo (TODO: talvez mudar depois que o player puder receber o tilemap)
 	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+	
+	self.noise.collision_layer = 8
+	self.noise.body_entered.connect(_on_noise)
+	
+func _on_noise(body):
+	if body is Npc:
+		body.detect_player()
 
 func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
 	self.tilemap_layer = tilemap
