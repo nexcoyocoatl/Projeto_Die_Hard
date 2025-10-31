@@ -4,12 +4,12 @@ class_name Player
 signal player_died
 var is_dead: bool = false
 
+# Animação e movimento
 @export_category("Script Exports")
 @export_group("Animation and Movement")
 @export var tween_speed : float = 0.2		# Velocidade da animação de translação (maior é mais devagar)
 var tilemap_layer : TileMapLayer
 var pathfinding_grid : AStarGrid2D
-
 var input_direction : Vector2 = Vector2.ZERO				# Direção de movimento do jogador
 var moving : bool = false					# Se está movendo ou não
 
@@ -17,13 +17,14 @@ var moving : bool = false					# Se está movendo ou não
 var action_queue = []
 var action_points = 0
 
+# Noise
+@onready var noise_radius : float = 0.0
 @onready var noise : Area2D = $Noise
 
 func _ready() -> void:
 	# Prende jogador ao centro do tile mais próximo (TODO: talvez mudar depois que o player puder receber o tilemap)
 	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	
-	self.noise.collision_layer = 8
 	self.noise.body_entered.connect(_on_noise)
 	
 func _on_noise(body):
@@ -44,6 +45,7 @@ func _physics_process(_delta: float) -> void:
 			return
 		input_direction = action_queue.pop_front()
 		move()
+	queue_redraw()
 		
 func receive_action(action):
 	if (GlobalVariables.DEBUG): print("Player received action")
@@ -66,6 +68,21 @@ func move():
 	else:
 		tween.tween_property(self, "position", position + (input_direction * GlobalVariables.TILE_SIZE), tween_speed).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(move_false)
+	
+	# TODO: Botar animação apenas no prõximo tile?
+	var tween_noise = create_tween()
+	tween_noise.tween_property(self, "noise_radius", $Noise/CollisionShape2D.shape.radius, 0.2).set_ease(Tween.EASE_IN_OUT)
+	tween_noise.tween_property(self, "noise_radius", 0, 0.0).set_ease(Tween.EASE_IN_OUT)
+	await tween_noise.finished
+	
+func _draw():
+	var noise_center: Vector2 = Vector2.ZERO
+	var noise_start_angle: float = 0.0
+	var noise_end_angle: float = 360.0
+	var noise_point_count: int = 50
+	var noise_color: Color = Color.WHITE
+	var noise_width: float = 2.0
+	draw_arc(noise_center, noise_radius, noise_start_angle, noise_end_angle, noise_point_count, noise_color, noise_width, true)
 
 # Função que desativa o movimento após uma ação
 func move_false():
