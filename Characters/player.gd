@@ -26,6 +26,7 @@ func _ready() -> void:
 	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	
 	self.noise.body_entered.connect(_on_noise)
+	self.noise.monitoring = false
 	
 func _on_noise(body):
 	if body is Npc:
@@ -56,6 +57,9 @@ func receive_action(action):
 
 # Movimenta o jogador
 func move():
+	if (input_direction != Vector2.ZERO): # se player mudou de posição (podemos adicionar outras ações)
+		noise.monitoring = true
+	
 	var cell : Vector2i = (position/GlobalVariables.TILE_SIZE + input_direction).floor()
 	var tween = create_tween()
 
@@ -87,6 +91,7 @@ func _draw():
 # Função que desativa o movimento após uma ação
 func move_false():
 	moving = false
+	noise.monitoring = false
 	if (GlobalVariables.DEBUG): print("Player finished one move")
 	
 	# Diminui os action points, e se acaba todos, avisa a cena Game (Main) que terminou
