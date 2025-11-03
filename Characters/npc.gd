@@ -357,5 +357,6 @@ func attack_melee():
 func detect_player():
 	cone_ray.look_at(player.global_position)
 	cone_ray.rotation_degrees -= 90
-	mode = Mode.FOLLOW
-	last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
+	if !alert:
+		mode = Mode.FOLLOW
+		last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
