@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GlobalVariables="*res://global_variables.gd"
+GlobalVariables="*res://Global_Scripts/global_variables.gd"
+CheckpointManager="*res://Global_Scripts/checkpoint_manager.gd"
 
 [input]
 

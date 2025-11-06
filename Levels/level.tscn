@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=4 uid="uid://db7t3hbot2qxq"]
+[gd_scene load_steps=17 format=4 uid="uid://db7t3hbot2qxq"]
 
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
+[ext_resource type="Script" uid="uid://c0553u1iprt7a" path="res://Levels/checkpoint.gd" id="8_ecu0b"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -53,89 +54,17 @@ sources/0 = SubResource("TileSetAtlasSource_eow3j")
 sources/3 = SubResource("TileSetAtlasSource_j5wjh")
 sources/4 = SubResource("TileSetAtlasSource_km5ld")
 
-[sub_resource type="Curve2D" id="Curve2D_n6hdu"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1168, 816, 0, 0, 0, 0, 1168, 1008, 0, 0, 0, 0, 48, 1008, 0, 0, 0, 0, 48, 816, 0, 0, 0, 0, 48, 1008, 0, 0, 0, 0, 1168, 1008, 0, 0, 0, 0, 1168, 816)
-}
-point_count = 7
-
-[sub_resource type="Curve2D" id="Curve2D_km5ld"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 48, 1200, 0, 0, 0, 0, 48, 1040, 0, 0, 0, 0, 1168, 1040, 0, 0, 0, 0, 1168, 1200, 0, 0, 0, 0, 1168, 1040, 0, 0, 0, 0, 48, 1040, 0, 0, 0, 0, 48, 1200)
-}
-point_count = 7
-
 [sub_resource type="Curve2D" id="Curve2D_42xju"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 16, 368, 0, 0, 0, 0, 16, 400)
 }
 point_count = 2
 
-[sub_resource type="Curve2D" id="Curve2D_i2t4f"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, -240, 208, 0, 0, 0, 0, -240, 240)
-}
-point_count = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ecu0b"]
+size = Vector2(64, 16)
 
-[sub_resource type="Curve2D" id="Curve2D_8cye3"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 432, 272, 0, 0, 0, 0, 432, 240, 0, 0, 0, 0, 432, 272, 0, 0, 0, 0, 528, 272, 0, 0, 0, 0, 528, 240, 0, 0, 0, 0, 528, 272, 0, 0, 0, 0, 656, 272, 0, 0, 0, 0, 656, 240, 0, 0, 0, 0, 656, 272, 0, 0, 0, 0, 784, 272, 0, 0, 0, 0, 784, 240, 0, 0, 0, 0, 784, 272, 0, 0, 0, 0, 912, 272, 0, 0, 0, 0, 912, 240, 0, 0, 0, 0, 912, 272, 0, 0, 0, 0, 1040, 272, 0, 0, 0, 0, 1040, 240, 0, 0, 0, 0, 1040, 272, 0, 0, 0, 0, 944, 272, 0, 0, 0, 0, 944, 240, 0, 0, 0, 0, 944, 272, 0, 0, 0, 0, 816, 272, 0, 0, 0, 0, 816, 240, 0, 0, 0, 0, 816, 272, 0, 0, 0, 0, 688, 272, 0, 0, 0, 0, 688, 240, 0, 0, 0, 0, 688, 272, 0, 0, 0, 0, 560, 272, 0, 0, 0, 0, 560, 240, 0, 0, 0, 0, 560, 272, 0, 0, 0, 0, 432, 272, 0, 0, 0, 0, 432, 240)
-}
-point_count = 32
-
-[sub_resource type="Curve2D" id="Curve2D_2orkt"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 976, 48, 0, 0, 0, 0, 976, 80, 0, 0, 0, 0, 976, 48, 0, 0, 0, 0, 848, 48, 0, 0, 0, 0, 848, 80, 0, 0, 0, 0, 848, 48, 0, 0, 0, 0, 720, 48, 0, 0, 0, 0, 720, 80, 0, 0, 0, 0, 720, 48, 0, 0, 0, 0, 592, 48, 0, 0, 0, 0, 592, 80, 0, 0, 0, 0, 592, 48, 0, 0, 0, 0, 464, 48, 0, 0, 0, 0, 464, 80, 0, 0, 0, 0, 464, 48, 0, 0, 0, 0, 368, 48, 0, 0, 0, 0, 368, 80, 0, 0, 0, 0, 368, 48, 0, 0, 0, 0, 496, 48, 0, 0, 0, 0, 496, 80, 0, 0, 0, 0, 496, 48, 0, 0, 0, 0, 624, 48, 0, 0, 0, 0, 624, 80, 0, 0, 0, 0, 624, 48, 0, 0, 0, 0, 752, 48, 0, 0, 0, 0, 752, 80, 0, 0, 0, 0, 752, 48, 0, 0, 0, 0, 880, 48, 0, 0, 0, 0, 880, 80, 0, 0, 0, 0, 880, 48, 0, 0, 0, 0, 976, 48)
-}
-point_count = 31
-
-[sub_resource type="Curve2D" id="Curve2D_aicyk"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1136, 464, 0, 0, 0, 0, 1104, 464)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_8b0r0"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 400, 624, 0, 0, 0, 0, 432, 624)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_h6smj"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1296, 336, 0, 0, 0, 0, 1296, 368)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_v5j5c"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1328, 400, 0, 0, 0, 0, 1328, 432)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_5pxul"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1360, 400, 0, 0, 0, 0, 1360, 432)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_fedht"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1392, 400, 0, 0, 0, 0, 1392, 432)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_4c15r"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1424, 400, 0, 0, 0, 0, 1424, 432)
-}
-point_count = 2
-
-[sub_resource type="Curve2D" id="Curve2D_ait7k"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 1328, 1040, 0, 0, 0, 0, 1360, 1040)
-}
-point_count = 2
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t2u7g"]
+size = Vector2(16, 32)
 
 [node name="Level" type="Node"]
 script = ExtResource("1_1ainy")
@@ -145,7 +74,7 @@ tile_map_data = PackedByteArray("AAAAAAYAAQAAAAAAAAAAAAoAAQAAAAAAAAAAAAsAAQAAAAA
 tile_set = SubResource("TileSet_7jktm")
 
 [node name="Player" parent="." instance=ExtResource("4_km5ld")]
-position = Vector2(1136, 1264)
+position = Vector2(-16, 784)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 drag_horizontal_enabled = true
@@ -161,47 +90,30 @@ default_color = Color(1, 0, 0, 1)
 [node name="LevelEnd" parent="." instance=ExtResource("6_1ainy")]
 position = Vector2(1504, 1056)
 
-[node name="Fighter2" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_n6hdu")
-
-[node name="Fighter1" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_km5ld")
-
 [node name="Shooter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_42xju")
 
-[node name="Shooter2" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_i2t4f")
+[node name="Checkpoint1" type="Area2D" parent="."]
+position = Vector2(8, 688)
+script = ExtResource("8_ecu0b")
 
-[node name="Shooter3" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_8cye3")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+position = Vector2(-8, 32)
+shape = SubResource("RectangleShape2D_ecu0b")
 
-[node name="Shooter4" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_2orkt")
+[node name="Respawn" type="Marker2D" parent="Checkpoint1"]
+position = Vector2(-8, 0)
 
-[node name="Fighter3" type="Path2D" parent="." groups=["Paths"]]
-position = Vector2(0, 32)
-curve = SubResource("Curve2D_aicyk")
+[node name="Checkpoint2" type="Area2D" parent="."]
+position = Vector2(784, 440)
+script = ExtResource("8_ecu0b")
 
-[node name="Fighter4" type="Path2D" parent="." groups=["Paths"]]
-position = Vector2(0, 32)
-curve = SubResource("Curve2D_8b0r0")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
+position = Vector2(32, -8)
+shape = SubResource("RectangleShape2D_t2u7g")
 
-[node name="Fighter5" type="Path2D" parent="." groups=["Paths"]]
-position = Vector2(0, 64)
-curve = SubResource("Curve2D_h6smj")
+[node name="Respawn" type="Marker2D" parent="Checkpoint2"]
+position = Vector2(0, -8)
 
-[node name="Fighter6" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_v5j5c")
-
-[node name="Fighter7" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_5pxul")
-
-[node name="Fighter8" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_fedht")
-
-[node name="Fighter9" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_4c15r")
-
-[node name="Shooter5" type="Path2D" parent="." groups=["Paths"]]
-curve = SubResource("Curve2D_ait7k")
+[connection signal="body_entered" from="Checkpoint1" to="Checkpoint1" method="_on_body_entered"]
+[connection signal="body_entered" from="Checkpoint2" to="Checkpoint2" method="_on_body_entered"]

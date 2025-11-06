@@ -14,7 +14,7 @@ var action_points : int = 0
 var player_action_queue = []
 var world_moving : bool = false
 
-var current_scene = null
+var current_scene : Level = null
 
 func _ready() -> void:
 	world_moving = false
@@ -29,7 +29,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
-				get_tree().change_scene_to_file.call_deferred("res://game.tscn")
+				if !current_scene.load_checkpoint():
+					get_tree().change_scene_to_file.call_deferred("res://game.tscn")
+				return
 				
 			if (pause_time):
 				resume_processing() # Despausa em cada botão pressionado, caso necessário

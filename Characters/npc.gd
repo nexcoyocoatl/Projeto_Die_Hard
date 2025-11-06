@@ -123,6 +123,7 @@ func _process(_delta) -> void:
 				if (npc_type == NpcType.SHOOTER):
 					mode = Mode.AIMING
 				else:
+					print(2)
 					mode = Mode.FOLLOW
 				
 			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
@@ -168,6 +169,7 @@ func create_cone():
 				
 				# TODO: fazer alerta no _process, talvez com outro raycast para parar o alerta
 				# antes de contar +1 no tempo
+				print("colidiu")
 				alert = true
 				cone_ray_angle = cone_ray_angle_alert
 				cone_ray.add_exception(player)
@@ -187,6 +189,7 @@ func create_cone():
 		# TODO: TEMPORÁRIO
 		# Ver como tirar isso tudo depois (senão ele troca o cone pra branco por alguns momentos)
 		if (alert):
+			print(1)
 			mode = Mode.FOLLOW
 			aiming_timer = 0
 			feedback_label.visible = false
@@ -218,7 +221,6 @@ func _generate_patrol_path() -> void:
 
 func receive_points():
 	moving = true
-
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
@@ -327,6 +329,7 @@ func aim_gun():
 	else:
 		aiming_timer = 0
 		feedback_label.visible = false
+		print(3)
 		mode = Mode.FOLLOW
 	
 	# TODO: Temporário (trocar para alternativa de chamar direto o move_finished sem necessidade de delay?)
@@ -358,5 +361,6 @@ func detect_player():
 	cone_ray.look_at(player.global_position)
 	cone_ray.rotation_degrees -= 90
 	if !alert:
+		print(4)
 		mode = Mode.FOLLOW
 		last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
