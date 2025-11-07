@@ -7,7 +7,7 @@ func _process(_delta):
 	pass
 
 func _on_restart_btn_pressed() -> void:
-	CheckpointManager.load_checkpoint()
+	CheckpointManager.load_checkpoint.call_deferred()
 	#get_tree().change_scene_to_file.call_deferred("res://game.tscn")
 	self.queue_free() # a propria cena se mata
 

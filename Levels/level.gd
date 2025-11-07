@@ -59,8 +59,14 @@ func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
 		player.visible = true
 		player.set_physics_process(true)
+		var player_data = CheckpointManager.player_checkpoint_positions[player]
 		var half_tile = Vector2(GlobalVariables.TILE_SIZE / 2.0, GlobalVariables.TILE_SIZE / 2.0)
-		player.global_position = CheckpointManager.player_checkpoint_positions[player] * GlobalVariables.TILE_SIZE + half_tile
+		
+		if player_data.has("respawn"):
+			player.global_position = player_data["respawn"] * GlobalVariables.TILE_SIZE + half_tile
+		if player_data.has("is_dead"):
+			player.is_dead = player_data["is_dead"]
+		
 		for npc: Npc in get_tree().get_nodes_in_group("Npcs"):
 			if npc in CheckpointManager.npc_checkpoint_data:
 				var data = CheckpointManager.npc_checkpoint_data[npc]
@@ -83,6 +89,8 @@ func load_checkpoint() -> bool:
 					npc.cone_ray.target_position = data["cone_ray_target_pos"]
 				if data.has("last_player_position"):
 					npc.last_player_position = data["last_player_position"]
+				if data.has("feedback_label_visible"):
+					npc.feedback_label.visible = data["feedback_label_visible"]
 					
 		return true
 	return false

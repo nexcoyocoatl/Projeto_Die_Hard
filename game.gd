@@ -29,8 +29,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
-				if !current_scene.load_checkpoint():
-					get_tree().change_scene_to_file.call_deferred("res://game.tscn")
+				current_scene.load_checkpoint.call_deferred()
 				return
 				
 			if (pause_time):
