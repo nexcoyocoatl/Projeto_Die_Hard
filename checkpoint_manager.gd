@@ -4,7 +4,7 @@ var player_checkpoint_positions : Dictionary = {}
 var npc_checkpoint_data : Dictionary = {}
 
 func save(body : Player, respawn : Vector2):
-  player_checkpoint_positions[body] = {
+	player_checkpoint_positions[body] = {
 		"respawn" : (respawn / GlobalVariables.TILE_SIZE).floor(),
 		"is_dead" : body.is_dead
 	}
