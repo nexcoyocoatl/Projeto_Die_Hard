@@ -1,7 +1,9 @@
 extends Node
+class_name Level
 
 var logical_tilemap : TileMapLayer
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
+var player : Player
 
 func init_pathgrid():
 	# Pathfinding
@@ -32,7 +34,7 @@ func _ready() -> void:
 	logical_tilemap = $Level1_LogicalTileMap
 	init_pathgrid()
 	var npcScene = preload("res://Characters/npc.tscn")
-	var player : Player = get_tree().get_nodes_in_group("Player")[0]
+	player = get_tree().get_nodes_in_group("Player")[0]
 	player.tilemap_layer = logical_tilemap
 	# Cria npcs no inicio dos paths
 	for path : Path2D in get_tree().get_nodes_in_group("Paths"):
@@ -44,6 +46,7 @@ func _ready() -> void:
 		add_child(line_path)
 		
 		var npc: Npc = npcScene.instantiate()
+		npc.add_to_group("Npcs")
 		npc.line_path = line_path
 		npc.path = path
 		npc.player = player
@@ -51,3 +54,43 @@ func _ready() -> void:
 		npc.pathfinding_grid = pathfinding_grid
 		add_child(npc)
 		npc.position = npc.path.curve.get_point_position(0)
+
+func load_checkpoint() -> bool:
+	if player in CheckpointManager.player_checkpoint_positions:
+		player.visible = true
+		player.set_physics_process(true)
+		var player_data = CheckpointManager.player_checkpoint_positions[player]
+		var half_tile = Vector2(GlobalVariables.TILE_SIZE / 2.0, GlobalVariables.TILE_SIZE / 2.0)
+		
+		if player_data.has("respawn"):
+			player.global_position = player_data["respawn"] * GlobalVariables.TILE_SIZE + half_tile
+		if player_data.has("is_dead"):
+			player.is_dead = player_data["is_dead"]
+		
+		for npc: Npc in get_tree().get_nodes_in_group("Npcs"):
+			if npc in CheckpointManager.npc_checkpoint_data:
+				var data = CheckpointManager.npc_checkpoint_data[npc]
+				npc.global_position = data["global_position"] * GlobalVariables.TILE_SIZE + half_tile
+				if data.has("mode"):
+					npc.mode = data["mode"]
+				if data.has("alert"):
+					npc.alert = data["alert"]
+				if data.has("current_patrol_index"):
+					npc.current_patrol_index = data["current_patrol_index"]
+				if data.has("is_shooting"):
+					npc.is_shooting = data["is_shooting"]
+				if data.has("direction"):
+					npc.direction = data["direction"]
+				if data.has("cone_ray_angle"):
+					npc.cone_ray_angle = data["cone_ray_angle"]
+				if data.has("aiming_timer"):
+					npc.aiming_timer = data["aiming_timer"]
+				if data.has("cone_ray_target_pos"):
+					npc.cone_ray.target_position = data["cone_ray_target_pos"]
+				if data.has("last_player_position"):
+					npc.last_player_position = data["last_player_position"]
+				if data.has("feedback_label_visible"):
+					npc.feedback_label.visible = data["feedback_label_visible"]
+					
+		return true
+	return false

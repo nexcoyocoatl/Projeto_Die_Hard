@@ -12,12 +12,13 @@ config_version=5
 
 config/name="Projeto_Die_Hard"
 run/main_scene="res://game.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GlobalVariables="*res://global_variables.gd"
+CheckpointManager="*res://checkpoint_manager.gd"
 
 [input]
 
