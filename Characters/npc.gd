@@ -33,6 +33,7 @@ var pathfinding_grid : AStarGrid2D
 var patrol_path : Array[Vector2i] = []
 var current_patrol_index : int = -1
 var last_player_position : Vector2i
+var last_player_global_position : Vector2i
 
 #Behavior 
 @export_group("Behavior") 
@@ -66,6 +67,7 @@ var cooldown : int = 0
 @export_range(10,90) var cone_ray_angle_alert : int = 30
 var cone_ray_angle : int = cone_ray_angle_normal
 var alert : bool = false
+var player_found : bool = false
 # TODO: Adicionar uma outra variável que verifica se o NPC tem como atirar?
 # Do jeito que tá, ele pode atirar quando uma mínima parte do cone encosta no jogador
 var is_shooting : bool = false	# Quando atira (cone fica vermelho)
@@ -73,6 +75,9 @@ var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
 func _ready() -> void:
+	last_player_global_position = player.global_position
+	player_found = false
+	
 	# TODO: Temporário? (ver outra forma, talvez?)
 	if (path.name.contains("Shooter")):
 		npc_type = NpcType.SHOOTER
@@ -86,7 +91,7 @@ func _ready() -> void:
 	feedback_label = $Label
 	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
 	cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
-	cone_ray.target_position = Vector2(0,cone_ray_dist)
+	cone_ray.target_position = Vector2(cone_ray_dist,0)
 	cone_ray.collide_with_areas = true # Colide com areas2d também
 	if feedback_label:
 		feedback_label.visible = false
@@ -98,21 +103,23 @@ func _draw() -> void:
 			draw_polygon(cone_polygon, [Color(1.0, 0.0, 0.0, 0.2)])
 		elif (alert):
 			draw_polygon(cone_polygon, [Color(1.0, 0.7, 0.0, 0.2)])
-		elif (mode == Mode.FOLLOW):
+		elif (cone_ray.target_position == Vector2(cone_ray_dist_alert,0)):
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 0.0, 0.2)])
 		else:
 			draw_polygon(cone_polygon, [Color(1.0, 1.0, 1.0, 0.2)])
 	
 func _process(_delta) -> void:
-	# TODO: Alerta de quando player chega perto (do lado ou atrás) também?
-	# Ou talvez por "som"?
+	if (player_found):
+		player_found = false
+		alert = true
+		detect_player()
+		cone_ray_angle = cone_ray_angle_alert
+	
 	if (moving):
 		if (alert):
-			cone_ray.look_at(player.position)
+			aiming_timer = 0
+			feedback_label.visible = false
 			
-			# Pra ajustar o look_at que fica "torto" 90 graus
-			# (TODO: não é necessário, mas talvez ver como arrumar)
-			cone_ray.rotation_degrees -= 90
 			distance_to_player = global_position.distance_to(player.global_position) / GlobalVariables.TILE_SIZE
 			
 			if npc_type == NpcType.FIGHTER: # Se for Lutador, verifique se está perto o suficiente para atacar.
@@ -124,25 +131,21 @@ func _process(_delta) -> void:
 					mode = Mode.AIMING
 				else:
 					mode = Mode.FOLLOW
-				
-			last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 			
 		else:
 			match direction:
 				Direction.UP:
-					cone_ray.rotation_degrees = 180
-				Direction.DOWN:
-					cone_ray.rotation_degrees = 0
-				Direction.LEFT:
-					cone_ray.rotation_degrees = 90
-				Direction.RIGHT:
 					cone_ray.rotation_degrees = 270
+				Direction.DOWN:
+					cone_ray.rotation_degrees = 90
+				Direction.LEFT:
+					cone_ray.rotation_degrees = 180
+				Direction.RIGHT:
+					cone_ray.rotation_degrees = 0
+				
+			if (mode == Mode.FOLLOW):
+				cone_ray.look_at(last_player_global_position)
 					
-		#create_cone()
-
-# Não pausa como o _process()
-# TODO: Ver como pausar e ainda ter o alerta funcionando até parar lógica e movimento
-func _physics_process(_delta: float) -> void:
 	create_cone()
 
 # Cria polígono do cone de visão
@@ -150,7 +153,6 @@ func create_cone():
 	cone_polygon.clear()
 	cone_polygon.append(cone_ray.position) # Posição do NPC
 	var original_rotation = cone_ray.rotation_degrees
-	var player_found : bool = false
 	
 	# Raycaster do ângulo de visão
 	for i in range(-cone_ray_angle, cone_ray_angle+1):
@@ -166,10 +168,6 @@ func create_cone():
 			if (!player_found and colliding_object == player):
 				player_found = true
 				
-				# TODO: fazer alerta no _process, talvez com outro raycast para parar o alerta
-				# antes de contar +1 no tempo
-				alert = true
-				cone_ray_angle = cone_ray_angle_alert
 				cone_ray.add_exception(player)
 				cone_ray.force_raycast_update()
 				if (cone_ray.is_colliding()):
@@ -184,13 +182,6 @@ func create_cone():
 	if (player_found):
 		cone_ray.remove_exception(player)
 	else:
-		# TODO: TEMPORÁRIO
-		# Ver como tirar isso tudo depois (senão ele troca o cone pra branco por alguns momentos)
-		if (alert):
-			mode = Mode.FOLLOW
-			aiming_timer = 0
-			feedback_label.visible = false
-		
 		alert = false
 		cone_ray_angle = cone_ray_angle_normal
 		
@@ -221,19 +212,20 @@ func receive_points():
 
 	match mode:
 		Mode.FOLLOW:
-			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
+			cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
 			current_patrol_index = -1
 			follow_player()
 		Mode.PATROL:
-			cone_ray.target_position = Vector2(0,cone_ray_dist)
+			cone_ray.target_position = Vector2(cone_ray_dist,0)
 			if patrol_path.is_empty():
 				_generate_patrol_path()
 			if current_patrol_index == -1:
 				var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 				current_patrol_index = find_closest_path_point(current_position)
 			patrol()
+			
 		Mode.AIMING:
-			cone_ray.target_position = Vector2(0,cone_ray_dist_alert)
+			cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
 			aim_gun()
 		Mode.ATTACKING:
 			attack_melee()
@@ -268,7 +260,9 @@ func patrol() -> void:
 	change_direction((target - global_position).normalized())
 	
 	tween.tween_property(self, "global_position", target, tween_speed).set_trans(Tween.TRANS_SINE)
-	tween.tween_callback(move_finished)
+	await tween.finished
+	queue_redraw()
+	move_finished()
 
 func follow_player():
 	var current_position : Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
@@ -299,7 +293,6 @@ func go_towards_position(from_position: Vector2i, to_position : Vector2i) -> voi
 	line_path.points = path_to_position
 
 func change_direction(move_direction: Vector2) -> void:
-	move_direction = move_direction
 	if (move_direction.x < 0.):
 		direction = Direction.LEFT
 	if (move_direction.x > 0.):
@@ -329,9 +322,7 @@ func aim_gun():
 		feedback_label.visible = false
 		mode = Mode.FOLLOW
 	
-	# TODO: Temporário (trocar para alternativa de chamar direto o move_finished sem necessidade de delay?)
-	var tween = create_tween()
-	tween.tween_callback(move_finished)
+	move_finished()
 
 func shoot():
 	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
@@ -340,23 +331,19 @@ func shoot():
 	
 	player.die()
 	
-	# TODO: Temporário
-	var tween = create_tween()
-	tween.tween_callback(move_finished)
+	move_finished()
 
 func attack_melee():
 	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
 	
 	player.die()
 	
-	# TODO: Temporário
-	var tween = create_tween()
-	tween.tween_callback(move_finished)
+	move_finished()
 	
 ## faz npc olhar para o player
 func detect_player():
 	cone_ray.look_at(player.global_position)
-	cone_ray.rotation_degrees -= 90
+	last_player_global_position = player.global_position
+	last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	if !alert:
 		mode = Mode.FOLLOW
-		last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
