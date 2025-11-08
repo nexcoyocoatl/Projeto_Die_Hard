@@ -12,14 +12,15 @@ var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movim
 var awaiting_done_confirmation = 0
 var action_points : int = 0
 var player_action_queue = []
-var world_moving : bool = false
+@onready var world_moving : bool = false
+@onready var player_dead : bool = false
 
 var current_scene : Level = null
 
 func _ready() -> void:
 	world_moving = false
 	current_scene = $Level
-	pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
+	#pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
 	var player = get_tree().get_nodes_in_group("Player")[0]
 	if player:
 		player.player_died.connect(_on_player_died)
@@ -29,6 +30,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
+				player_dead = false
 				current_scene.load_checkpoint.call_deferred()
 				return
 				
@@ -65,7 +67,9 @@ func _physics_process(delta) -> void:
 		move_cooldown_timer = move_cooldown
 		move_world()
 
-	if (awaiting_done_confirmation <= 0 and world_moving):
+	# TODO: Modificar as telas de game over e you win para receberem pontos ou deixar assim
+	# (quando player morre o jogo não paus)
+	if (awaiting_done_confirmation <= 0 and world_moving and !player_dead):
 		world_moving = false
 		if (GlobalVariables.DEBUG): print("All Characters/Objects moved and confirmed")
 		stop_world()
@@ -77,6 +81,7 @@ func _process(_delta) -> void:
 # Pausa todos outros nodos
 func pause_processing():
 	pause_time = true
+	queue_redraw() # Força um último redraw (talvez seja desnecessário)
 	if (GlobalVariables.DEBUG): print("Time Paused")
 	OS.low_processor_usage_mode = true
 	get_tree().paused = true
@@ -94,8 +99,7 @@ func child_done_confirmation() -> void:
 
 # Função para parar todos movimentos (é chamada quando recebe confirmação de todos filhos que pararam as ações)
 func stop_world():
-	# TODO: VER FORMA DE ESPERAR TUDO PARAR ANTES DE PAUSAR
-	#pause_processing()
+	pause_processing()
 	pass
 
 # Função para chamar todos filhos Movable para executarem um movimento
@@ -113,6 +117,7 @@ func goto_scene(path: String):
 	add_child(current_scene)  
 	
 func _on_player_died():
+	player_dead = true
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
 		get_tree().root.add_child.call_deferred(game_over_scene.instantiate())
