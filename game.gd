@@ -4,8 +4,8 @@ extends Node2D
 @export_group("Time and Movement")
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
-@export_group("Scenes") 
-@export var game_over_scene: PackedScene 
+@export_group("Scenes")
+@export var game_over_scene: PackedScene
 
 var input_direction : Vector2				# Direção de movimento do jogador
 var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movimento
@@ -13,7 +13,7 @@ var awaiting_done_confirmation = 0
 var action_points : int = 0
 var player_action_queue = []
 @onready var world_moving : bool = false
-@onready var player_dead : bool = false
+@onready var player : Player
 
 var current_scene : Level = null
 
@@ -21,7 +21,7 @@ func _ready() -> void:
 	world_moving = false
 	current_scene = $Level
 	#pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
-	var player = get_tree().get_nodes_in_group("Player")[0]
+	player = get_tree().get_nodes_in_group("Player")[0]
 	if player:
 		player.player_died.connect(_on_player_died)
 
@@ -30,16 +30,16 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
-				player_dead = false
 				current_scene.load_checkpoint.call_deferred()
 				return
 				
 			if (pause_time):
-				resume_processing() # Despausa em cada botão pressionado, caso necessário
+				# TODO: Fazer alguma coisa?
+				pass
 
 			# Direção do movimento
-			# Só funciona quando acabar o cooldown E o mundo estiver parado
-			if (!world_moving and move_cooldown_timer <= 0):
+			# Só funciona quando acabar o cooldown E o mundo estiver parado E o jogador estiver vivo
+			if (!world_moving and move_cooldown_timer <= 0 and !player.is_dead):
 				action_points += 1
 
 				input_direction = Vector2.ZERO
@@ -69,7 +69,7 @@ func _physics_process(delta) -> void:
 
 	# TODO: Modificar as telas de game over e you win para receberem pontos ou deixar assim
 	# (quando player morre o jogo não paus)
-	if (awaiting_done_confirmation <= 0 and world_moving and !player_dead):
+	if (awaiting_done_confirmation <= 0 and world_moving):
 		world_moving = false
 		if (GlobalVariables.DEBUG): print("All Characters/Objects moved and confirmed")
 		stop_world()
@@ -79,19 +79,21 @@ func _process(_delta) -> void:
 	pass
 
 # Pausa todos outros nodos
-func pause_processing():
-	pause_time = true
-	queue_redraw() # Força um último redraw (talvez seja desnecessário)
-	if (GlobalVariables.DEBUG): print("Time Paused")
-	OS.low_processor_usage_mode = true
-	get_tree().paused = true
+# TODO: Desativado por enquanto (pra sempre?)
+#func pause_processing():
+	#pause_time = true
+	#queue_redraw() # Força um último redraw (talvez seja desnecessário)
+	#if (GlobalVariables.DEBUG): print("Time Paused")
+	#OS.low_processor_usage_mode = true
+	#get_tree().paused = true
 
 # Despausa
-func resume_processing():
-	pause_time = false
-	if (GlobalVariables.DEBUG): ("Time Resumed")
-	OS.low_processor_usage_mode = false
-	get_tree().paused = false
+# TODO: Desativado por enquanto (pra sempre?)
+#func resume_processing():
+	#pause_time = false
+	#if (GlobalVariables.DEBUG): ("Time Resumed")
+	#OS.low_processor_usage_mode = false
+	#get_tree().paused = false
 
 # Recebe confirmação dos nodos Movable (individualmente) quando pararem
 func child_done_confirmation() -> void:
@@ -99,7 +101,7 @@ func child_done_confirmation() -> void:
 
 # Função para parar todos movimentos (é chamada quando recebe confirmação de todos filhos que pararam as ações)
 func stop_world():
-	pause_processing()
+	#pause_processing()
 	pass
 
 # Função para chamar todos filhos Movable para executarem um movimento
@@ -114,10 +116,9 @@ func goto_scene(path: String):
 	var new_scene : PackedScene = ResourceLoader.load(path)
 	current_scene = new_scene.instantiate()
 	#scene_limit = null # indica a troca de cena
-	add_child(current_scene)  
+	add_child(current_scene)
 	
 func _on_player_died():
-	player_dead = true
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
 		get_tree().root.add_child.call_deferred(game_over_scene.instantiate())
