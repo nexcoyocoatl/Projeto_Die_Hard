@@ -109,6 +109,8 @@ func die():
 	
 	if(GlobalVariables.DEBUG): print("The player died!")
 	is_dead = true
+	action_points = 0
+	action_queue.clear()
 	emit_signal("player_died") # Avisa que o jogador morreu
 	visible = false
 	set_physics_process(false) # Para o _physics_process de processar movimentos

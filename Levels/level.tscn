@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://db7t3hbot2qxq"]
+[gd_scene load_steps=31 format=4 uid="uid://db7t3hbot2qxq"]
 
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
-[ext_resource type="Script" uid="uid://d3g3od7pb1qev" path="res://checkpoint.gd" id="8_0et7e"]
+[ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="8_0et7e"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -138,11 +138,14 @@ _data = {
 }
 point_count = 2
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_02vxb"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ecu0b"]
 size = Vector2(64, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_63wrd"]
 size = Vector2(16, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_02vxb"]
+size = Vector2(96, 16)
 
 [node name="Level" type="Node"]
 script = ExtResource("1_1ainy")
@@ -218,7 +221,7 @@ position = Vector2(0, 720)
 script = ExtResource("8_0et7e")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
-shape = SubResource("RectangleShape2D_02vxb")
+shape = SubResource("RectangleShape2D_ecu0b")
 
 [node name="Respawn" type="Marker2D" parent="Checkpoint1"]
 position = Vector2(0, -32)
@@ -233,5 +236,16 @@ shape = SubResource("RectangleShape2D_63wrd")
 [node name="Respawn" type="Marker2D" parent="Checkpoint2"]
 position = Vector2(-32, 0)
 
+[node name="Checkpoint3" type="Area2D" parent="."]
+position = Vector2(1136, 1304)
+script = ExtResource("8_0et7e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint3"]
+shape = SubResource("RectangleShape2D_02vxb")
+
+[node name="Respawn" type="Marker2D" parent="Checkpoint3"]
+position = Vector2(-32, -8)
+
 [connection signal="body_entered" from="Checkpoint1" to="Checkpoint1" method="_on_body_entered"]
 [connection signal="body_entered" from="Checkpoint2" to="Checkpoint2" method="_on_body_entered"]
+[connection signal="body_entered" from="Checkpoint3" to="Checkpoint3" method="_on_body_entered"]
