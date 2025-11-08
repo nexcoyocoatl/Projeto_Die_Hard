@@ -35,7 +35,8 @@ func _on_noise(body):
 func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
 	self.tilemap_layer = tilemap
 	self.pathfinding_grid = pathgrid
-	
+
+# TODO: Trocar pra _process? fazendo isso quebra a tela de gameover
 func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
 	if (moving == false and action_points):
@@ -46,6 +47,7 @@ func _physics_process(_delta: float) -> void:
 			return
 		input_direction = action_queue.pop_front()
 		move()
+	
 	queue_redraw()
 		
 func receive_action(action):
@@ -71,20 +73,22 @@ func move():
 		tween.tween_property(self, "position", position, tween_speed/2).set_trans(Tween.TRANS_BOUNCE)
 	else:
 		tween.tween_property(self, "position", position + (input_direction * GlobalVariables.TILE_SIZE), tween_speed).set_trans(Tween.TRANS_SINE)
-	tween.tween_callback(move_false)
 	
 	# TODO: Botar animação apenas no prõximo tile?
 	var tween_noise = create_tween()
 	tween_noise.tween_property(self, "noise_radius", $Noise/CollisionShape2D.shape.radius, 0.2).set_ease(Tween.EASE_IN_OUT)
 	tween_noise.tween_property(self, "noise_radius", 0, 0.0).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
 	await tween_noise.finished
+	queue_redraw()
+	move_false()
 	
 func _draw():
 	var noise_center: Vector2 = Vector2.ZERO
 	var noise_start_angle: float = 0.0
 	var noise_end_angle: float = 360.0
 	var noise_point_count: int = 50
-	var noise_color: Color = Color.WHITE
+	var noise_color: Color = Color(1.0, 1.0, 1.0, 0.275)
 	var noise_width: float = 2.0
 	draw_arc(noise_center, noise_radius, noise_start_angle, noise_end_angle, noise_point_count, noise_color, noise_width, true)
 
