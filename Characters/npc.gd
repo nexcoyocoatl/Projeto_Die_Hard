@@ -316,6 +316,7 @@ func aim_gun():
 		
 		if aiming_timer > time_to_shoot:
 			shoot() # Atira
+			return
 			
 	else:
 		aiming_timer = 0
