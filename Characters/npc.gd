@@ -3,14 +3,16 @@ class_name Npc
 
 enum NpcType{
 	SHOOTER, 
-	FIGHTER
+	FIGHTER, 
+	DOG
 }
 
 enum Mode {
 	PATROL,
 	FOLLOW,
 	AIMING,
-	ATTACKING
+	ATTACKING, 
+	ALERTED
 }
 
 enum Direction {
@@ -74,6 +76,15 @@ var is_shooting : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
 var cone_polygon : PackedVector2Array = []
 
+# --- ADIÇÕES PARA O DOG ---
+# Conecta o script aos nós de Area2D
+@onready var detection_circle = get_node_or_null("DetectionCircle")
+@onready var bark_alert = get_node_or_null("BarkAlert")
+
+# Variáveis para a mecânica de movimento duplo
+var moves_per_turn : int  #O valor será definido no _ready()
+var moves_remaining : int = 0
+
 func _ready() -> void:
 	last_player_global_position = player.global_position
 	player_found = false
@@ -81,18 +92,43 @@ func _ready() -> void:
 	# TODO: Temporário? (ver outra forma, talvez?)
 	if (path.name.contains("Shooter")):
 		npc_type = NpcType.SHOOTER
+		moves_per_turn = 1 # <-- Movimento definido como 1
 		$Sprite2D.modulate = Color(1.0, 0.47, 0.47, 1.0)
+		
 	elif (path.name.contains("Fighter")):
 		npc_type = NpcType.FIGHTER
+		moves_per_turn = 1 # <-- Movimento definido como 1
 		$Sprite2D.modulate = Color(0.85, 1.0, 0.47, 1.0)
+		
+	elif (path.name.contains("Dog")):
+		npc_type = NpcType.DOG
+		moves_per_turn = 2 # <-- Movimento definido como 2
+		$Sprite2D.modulate = Color(0.514, 0.322, 0.05, 1.0) 
 	
+	#Configuração Específica por TIPO 
+		#Configuração Específica do DOG
+	if npc_type == NpcType.DOG:
+		# --- Configuração Específica do DOG ---
+		detection_circle = get_node_or_null("DetectionCircle")
+		bark_alert = get_node_or_null("BarkAlert")
+		
+		if detection_circle:
+			detection_circle.body_entered.connect(_on_DetectionCircle_body_entered)
+			detection_circle.body_exited.connect(_on_DetectionCircle_body_exited)
+		
+		if bark_alert:
+			bark_alert.body_entered.connect(_on_BarkAlert_body_entered)
+			
+	#Configuração Padrão (SHOOTER / FIGHTER)
 	# Vision Cone
 	cone_ray = $ConeRay
+	if cone_ray:
+		cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
+		cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
+		cone_ray.target_position = Vector2(cone_ray_dist,0)
+		cone_ray.collide_with_areas = true # Colide com areas2d também
+		
 	feedback_label = $Label
-	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
-	cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
-	cone_ray.target_position = Vector2(cone_ray_dist,0)
-	cone_ray.collide_with_areas = true # Colide com areas2d também
 	if feedback_label:
 		feedback_label.visible = false
 	
@@ -126,6 +162,10 @@ func _process(_delta) -> void:
 				if distance_to_player <= attack_range_melee:
 					mode = Mode.ATTACKING
 			
+			elif npc_type == NpcType.DOG:
+				if distance_to_player <= attack_range_melee:
+					mode = Mode.ATTACKING
+			
 			if (mode == Mode.PATROL or mode == Mode.FOLLOW):
 				if (npc_type == NpcType.SHOOTER):
 					mode = Mode.AIMING
@@ -146,7 +186,9 @@ func _process(_delta) -> void:
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
 					
-	create_cone()
+# O DOG não usa cone de visão, só os outros
+	if npc_type != NpcType.DOG:
+		create_cone()
 
 # Cria polígono do cone de visão
 func create_cone():
@@ -210,6 +252,16 @@ func _generate_patrol_path() -> void:
 func receive_points():
 	moving = true
 
+#LÓGICA DO LATIDO (DOG)
+	if npc_type == NpcType.DOG and bark_alert:
+		if mode == Mode.FOLLOW or mode == Mode.ATTACKING:
+			bark_alert.monitoring = true # Começa a latir
+		else:
+			bark_alert.monitoring = false # Para de latir
+
+	#MODIFICAÇÃO: LÓGICA DE MÚLTIPLOS MOVIMENTOS
+	moves_remaining = moves_per_turn #Define quantos movimentos fazer (1 para outros, 2 para o Dog)
+
 	match mode:
 		Mode.FOLLOW:
 			cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
@@ -223,12 +275,13 @@ func receive_points():
 				var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
 				current_patrol_index = find_closest_path_point(current_position)
 			patrol()
-			
 		Mode.AIMING:
 			cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
 			aim_gun()
 		Mode.ATTACKING:
-			attack_melee()
+			attack_melee() 
+		Mode.ALERTED: 
+			alert_investigate() # Vai para o local do som
 
 func find_closest_path_point(given_position : Vector2i) -> int:
 	var closest_index: int = 0
@@ -304,8 +357,37 @@ func change_direction(move_direction: Vector2) -> void:
 
 func move_finished() -> void:
 	moving = false
-	if (GlobalVariables.DEBUG): print(self.name, " stops moving")
-	get_tree().call_group("Game", "child_done_confirmation")
+	moves_remaining -= 1 # Subtrai um movimento
+
+	if moves_remaining > 0:
+		# Se ainda tem movimentos (ex: DOG), execute o turno de novo
+		moving = true
+
+		#RE-EXECUTA A LÓGICA DE AÇÃO
+		match mode:
+			Mode.FOLLOW:
+				cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
+				current_patrol_index = -1
+				follow_player()
+			Mode.PATROL:
+				cone_ray.target_position = Vector2(cone_ray_dist,0)
+				if patrol_path.is_empty():
+					_generate_patrol_path()
+				if current_patrol_index == -1:
+					var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+					current_patrol_index = find_closest_path_point(current_position)
+				patrol()
+			Mode.AIMING:
+				cone_ray.target_position = Vector2(cone_ray_dist_alert,0)
+				aim_gun()
+			Mode.ATTACKING:
+				attack_melee() 
+			Mode.ALERTED: 
+				alert_investigate()
+	else:
+		# Se acabaram os movimentos, termine o turno
+		if (GlobalVariables.DEBUG): print(self.name, " stops moving")
+		get_tree().call_group("Game", "child_done_confirmation")
 	
 func aim_gun():
 	if (alert):
@@ -323,7 +405,11 @@ func aim_gun():
 		feedback_label.visible = false
 		mode = Mode.FOLLOW
 	
-	move_finished()
+	moves_remaining = 0 # Mira consome o turno inteiro
+
+	var tween = create_tween()
+	tween.tween_interval(tween_speed) # Apenas espera
+	tween.tween_callback(move_finished)
 
 func shoot():
 	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
@@ -332,14 +418,22 @@ func shoot():
 	
 	player.die()
 	
-	move_finished()
+	moves_remaining = 0 # Tiro consome o turno inteiro
+
+	var tween = create_tween()
+	tween.tween_interval(tween_speed) # Apenas espera
+	tween.tween_callback(move_finished)
 
 func attack_melee():
-	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
+	if(GlobalVariables.DEBUG): print("NPC FIGHTER ou DOG: ATTACK!")
 	
 	player.die()
 	
-	move_finished()
+	moves_remaining = 0 #Ação de ataque deve consumir todos os movimentos restantes do turno
+	
+	var tween = create_tween()
+	tween.tween_interval(tween_speed) # Apenas espera
+	tween.tween_callback(move_finished)
 	
 ## faz npc olhar para o player
 func detect_player():
@@ -347,4 +441,48 @@ func detect_player():
 	last_player_global_position = player.global_position
 	last_player_position = (player.global_position / GlobalVariables.TILE_SIZE).floor()
 	if !alert:
+		mode = Mode.FOLLOW 
+
+#Funções Detecção do DOG
+func _on_DetectionCircle_body_entered(body):
+	if body is Player:
+		alert = true # O cachorro viu/cheirou o jogador 
+		mode = Mode.FOLLOW # Começa a perseguir
+
+func _on_DetectionCircle_body_exited(body):
+	if body is Player:
+		alert = false # O jogador saiu do alcance 
+	
+func hear_sound(sound_position_global): #Chamada quando o som do player toca o círculo de detecção do dog
+	if npc_type == Npc.NpcType.DOG and mode == Mode.PATROL: #Só reage ao som se for um DOG e estiver patrulhando
+		print("DOG ouviu um som!")
+		mode = Mode.ALERTED 
+		last_player_position = (sound_position_global / GlobalVariables.TILE_SIZE).floor()#Salva a localização do som para investigar
+		moves_remaining = 0  #Para o DOG por um turno para "escutar"
+		move_finished()
+
+func alert_investigate():#Ação do modo 'ALERTED'
+	# Move-se em direção ao local do som
+	var current_position = (global_position / GlobalVariables.TILE_SIZE).floor()
+	go_towards_position(current_position, last_player_position)
+	
+	# Se o DOG chegou ao local do som e não viu o player, ele volta a patrulhar.
+	if current_position == last_player_position and not alert:
+		mode = Mode.PATROL
+
+# --- Funções Latido do DOG
+func _on_BarkAlert_body_entered(body):
+	# Se o latido tocou outro NPC (que não seja o próprio dog)
+	if body is Npc and body != self:
+		# Se o outro NPC está patrulhando
+		if body.mode == Mode.PATROL:
+			if(GlobalVariables.DEBUG): print(body.name, " ouviu o latido do ", self.name)
+			# Diga ao outro NPC para ir até a posição do cachorro
+			body.alert_by_dog(global_position)
+
+func alert_by_dog(dog_position_global):
+	# Esta função é chamada em OUTROS NPCs
+	if mode == Mode.PATROL:
 		mode = Mode.FOLLOW
+		# O NPC vai investigar o local do latido (posição do cachorro)
+		last_player_position = (dog_position_global / GlobalVariables.TILE_SIZE).floor()
