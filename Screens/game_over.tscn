@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://c6j5rxqqwk70k"]
 
 [ext_resource type="Script" uid="uid://dlbv48svo7gfb" path="res://Screens/game_over.gd" id="1_onka8"]
-[ext_resource type="Texture2D" uid="uid://w8oo24k62sn0" path="res://Textures/GameOver.png" id="1_rqsc4"]
+[ext_resource type="Texture2D" uid="uid://sjlmvl1fwk8v" path="res://Textures/GameOver.png" id="1_rqsc4"]
 
 [sub_resource type="Animation" id="Animation_y26ei"]
 resource_name = "GameOver"

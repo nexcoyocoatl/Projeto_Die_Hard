@@ -3,11 +3,16 @@ extends Node
 var player_checkpoint_positions : Dictionary = {}
 var npc_checkpoint_data : Dictionary = {}
 
-func save(body : Player, respawn : Vector2):
+func save(body : Player, respawn : Vector2) -> bool:
+	for npc : Npc in get_tree().get_nodes_in_group("Npcs"):
+		if npc.mode == npc.Mode.FOLLOW or npc.alert:
+			return false
+
 	player_checkpoint_positions[body] = {
 		"respawn" : (respawn / GlobalVariables.TILE_SIZE).floor(),
 		"is_dead" : body.is_dead
 	}
+	
 	for npc : Npc in get_tree().get_nodes_in_group("Npcs"):
 		npc_checkpoint_data[npc] = {
 			"mode" : npc.mode,
@@ -23,6 +28,7 @@ func save(body : Player, respawn : Vector2):
 			"feedback_label_visible" : npc.feedback_label.visible
 		}
 	print("Saved")
-
+	return true
+	
 func load_checkpoint():
 	get_tree().get_first_node_in_group("Game").current_scene.load_checkpoint()
