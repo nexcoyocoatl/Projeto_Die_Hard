@@ -88,6 +88,10 @@ func load_checkpoint() -> bool:
 					npc.aiming_timer = data["aiming_timer"]
 				if data.has("cone_ray_target_pos"):
 					npc.cone_ray.target_position = data["cone_ray_target_pos"]
+				if data.has("cone_ray_rotation"):
+					npc.cone_ray.rotation_degrees = data["cone_ray_rotation"]
+				if data.has("player_found"):
+					npc.player_found = data["player_found"]
 				if data.has("last_player_position"):
 					npc.last_player_position = data["last_player_position"]
 				if data.has("feedback_label_visible"):

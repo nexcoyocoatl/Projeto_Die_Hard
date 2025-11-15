@@ -142,7 +142,7 @@ point_count = 2
 size = Vector2(64, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_63wrd"]
-size = Vector2(16, 32)
+size = Vector2(192, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_02vxb"]
 size = Vector2(96, 16)
@@ -227,14 +227,15 @@ shape = SubResource("RectangleShape2D_ecu0b")
 position = Vector2(0, -32)
 
 [node name="Checkpoint2" type="Area2D" parent="."]
-position = Vector2(816, 432)
+position = Vector2(1056, 400)
 script = ExtResource("8_0et7e")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_63wrd")
 
 [node name="Respawn" type="Marker2D" parent="Checkpoint2"]
-position = Vector2(-32, 0)
+position = Vector2(80, 8)
 
 [node name="Checkpoint3" type="Area2D" parent="."]
 position = Vector2(1136, 1304)

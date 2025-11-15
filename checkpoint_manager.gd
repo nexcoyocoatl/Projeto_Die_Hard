@@ -24,6 +24,8 @@ func save(body : Player, respawn : Vector2) -> bool:
 			"cone_ray_angle" : npc.cone_ray_angle,
 			"aiming_timer" : npc.aiming_timer,
 			"cone_ray_target_pos" : npc.cone_ray.target_position,
+			"cone_ray_rotation" : npc.cone_ray.rotation_degrees,
+			"player_found" : npc.player_found,
 			"last_player_position" : npc.last_player_position,
 			"feedback_label_visible" : npc.feedback_label.visible
 		}
