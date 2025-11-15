@@ -52,9 +52,10 @@ func _ready() -> void:
 		npc.player = player
 		npc.tilemap_layer = logical_tilemap
 		npc.pathfinding_grid = pathfinding_grid
-		add_child(npc)
+		npc.defaul_look_rotation = rad_to_deg( ( npc.path.curve.get_point_position(1) - npc.path.curve.get_point_position(0) ).angle() )
 		npc.position = npc.path.curve.get_point_position(0)
-
+		add_child(npc)
+		
 func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
 		player.visible = true

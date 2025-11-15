@@ -72,6 +72,7 @@ var player_found : bool = false
 # Do jeito que tá, ele pode atirar quando uma mínima parte do cone encosta no jogador
 var is_shooting : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
+var defaul_look_rotation : float
 var cone_polygon : PackedVector2Array = []
 
 func _ready() -> void:
@@ -93,6 +94,7 @@ func _ready() -> void:
 	cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
 	cone_ray.target_position = Vector2(cone_ray_dist,0)
 	cone_ray.collide_with_areas = true # Colide com areas2d também
+	cone_ray.rotation_degrees = defaul_look_rotation
 	if feedback_label:
 		feedback_label.visible = false
 	
@@ -133,15 +135,19 @@ func _process(_delta) -> void:
 					mode = Mode.FOLLOW
 			
 		else:
-			match direction:
-				Direction.UP:
-					cone_ray.rotation_degrees = 270
-				Direction.DOWN:
-					cone_ray.rotation_degrees = 90
-				Direction.LEFT:
-					cone_ray.rotation_degrees = 180
-				Direction.RIGHT:
-					cone_ray.rotation_degrees = 0
+			var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+			if patrol_path.has(current_position) and patrol_path.size() == 2:
+				cone_ray.rotation_degrees = defaul_look_rotation
+			else:
+				match direction:
+					Direction.UP:
+						cone_ray.rotation_degrees = 270
+					Direction.DOWN:
+						cone_ray.rotation_degrees = 90
+					Direction.LEFT:
+						cone_ray.rotation_degrees = 180
+					Direction.RIGHT:
+						cone_ray.rotation_degrees = 0
 				
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
@@ -244,15 +250,21 @@ func patrol() -> void:
 	if patrol_path.is_empty():
 		move_finished()
 		return
+		
 	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+	
 	# se npc ainda não está no caminho de patrulha, vai até ele
 	if !patrol_path.has(current_position):
 		current_patrol_index = find_closest_path_point(current_position)
 		go_towards_position(current_position, patrol_path[current_patrol_index])
 		return
+		
 	# chegou no caminho de patrulha, segue de onde está
-	if current_patrol_index == patrol_path.size() - 1: current_patrol_index = 1
-	else: current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
+	if current_patrol_index == patrol_path.size() - 1: 
+		current_patrol_index = 1
+	else: 
+		current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
+		
 	var target: Vector2 = Vector2(patrol_path[current_patrol_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	var tween = create_tween()
 	
