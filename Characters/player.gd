@@ -36,6 +36,16 @@ func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
 	self.tilemap_layer = tilemap
 	self.pathfinding_grid = pathgrid
 
+func sprite_direction(_input_direction):
+	if (_input_direction.y > 0):
+		$AnimatedSprite2D.play("Front")	
+	elif (_input_direction.y < 0):
+		$AnimatedSprite2D.play("Back")	
+	elif (_input_direction.x > 0):
+		$AnimatedSprite2D.play("Right")
+	elif (_input_direction.x < 0):
+		$AnimatedSprite2D.play("Left")
+
 # TODO: Trocar pra _process? fazendo isso quebra a tela de gameover
 func _physics_process(_delta: float) -> void:
 	# Se não está movendo e tem action points para usar, executa um por um
@@ -46,6 +56,7 @@ func _physics_process(_delta: float) -> void:
 			move_false()
 			return
 		input_direction = action_queue.pop_front()
+		sprite_direction(input_direction)
 		move()
 	
 	queue_redraw()

@@ -1,7 +1,45 @@
-[gd_scene load_steps=5 format=3 uid="uid://clbdybjufnd0r"]
+[gd_scene load_steps=9 format=3 uid="uid://clbdybjufnd0r"]
 
-[ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cvgxwqeg0wd3v" path="res://Characters/player.gd" id="1_onrkg"]
+[ext_resource type="Texture2D" uid="uid://d2aq1m03n8hrr" path="res://Characters/Sprites/JohnMcClane_Back.png" id="3_4m0gv"]
+[ext_resource type="Texture2D" uid="uid://tm38qqweqp3a" path="res://Characters/Sprites/JohnMcClane_Front.png" id="4_p728j"]
+[ext_resource type="Texture2D" uid="uid://byu5jsomhxq5" path="res://Characters/Sprites/JohnMcClane_Left.png" id="5_5slg2"]
+[ext_resource type="Texture2D" uid="uid://cypkntk25mrv8" path="res://Characters/Sprites/JohnMcClane_Right.png" id="6_cbmiu"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w3rah"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_4m0gv")
+}],
+"loop": true,
+"name": &"Back",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_p728j")
+}],
+"loop": false,
+"name": &"Front",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_5slg2")
+}],
+"loop": true,
+"name": &"Left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_cbmiu")
+}],
+"loop": true,
+"name": &"Right",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_onrkg"]
 size = Vector2(30, 30)
@@ -13,9 +51,10 @@ radius = 64.4981
 process_mode = 1
 script = ExtResource("1_onrkg")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("1_4flbx")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -16)
+sprite_frames = SubResource("SpriteFrames_w3rah")
+animation = &"Front"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_onrkg")
