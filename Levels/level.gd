@@ -55,6 +55,11 @@ func _ready() -> void:
 		npc.defaul_look_rotation = rad_to_deg( ( npc.path.curve.get_point_position(1) - npc.path.curve.get_point_position(0) ).angle() )
 		npc.position = npc.path.curve.get_point_position(0)
 		add_child(npc)
+	
+	# Tosqueira pra desenhar as partes do foreground em cima de tudo
+	var foregroundNode = $Foreground
+	remove_child(foregroundNode)
+	add_child(foregroundNode)
 		
 func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
