@@ -243,7 +243,7 @@ position = Vector2(1056, 400)
 script = ExtResource("8_0et7e")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
-position = Vector2(0, 8)
+position = Vector2(0, -40)
 shape = SubResource("RectangleShape2D_63wrd")
 
 [node name="Respawn" type="Marker2D" parent="Checkpoint2"]
