@@ -1,17 +1,18 @@
-[gd_scene load_steps=35 format=4 uid="uid://db7t3hbot2qxq"]
+[gd_scene load_steps=36 format=4 uid="uid://db7t3hbot2qxq"]
 
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_1ainy"]
-[ext_resource type="Texture2D" uid="uid://h5jm6y37c1ub" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
-[ext_resource type="Texture2D" uid="uid://cvvaqot1nygxt" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
+[ext_resource type="Texture2D" uid="uid://bpke8xrntljl3" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
+[ext_resource type="Texture2D" uid="uid://b21ej5uqjyqbc" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
 [ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="8_0et7e"]
-[ext_resource type="Texture2D" uid="uid://bj7bp48ydgjb8" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
-[ext_resource type="Texture2D" uid="uid://bg76q633btdof" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
+[ext_resource type="Texture2D" uid="uid://dqp5l1lrgi4hf" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
+[ext_resource type="Texture2D" uid="uid://bju3gm0c3sxwu" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
+[ext_resource type="Texture2D" uid="uid://uhitve0vtxdq" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -164,7 +165,7 @@ color = Color(0, 0, 0, 1)
 [node name="Background" type="Node" parent="."]
 
 [node name="FloorLayer" type="Sprite2D" parent="Background"]
-position = Vector2(609, 597)
+position = Vector2(609, 596)
 texture = ExtResource("2_eabcg")
 
 [node name="BottomLayer" type="Sprite2D" parent="Background"]
@@ -270,12 +271,16 @@ position = Vector2(-32, -8)
 
 [node name="Foreground" type="Node" parent="."]
 
+[node name="Level1TopTranslucent" type="Sprite2D" parent="Foreground"]
+position = Vector2(609, 596)
+texture = ExtResource("11_dvejp")
+
 [node name="TopLayer" type="Sprite2D" parent="Foreground"]
-position = Vector2(609, 597)
+position = Vector2(609, 596)
 texture = ExtResource("11_3hgmi")
 
 [node name="LightsLayer" type="Sprite2D" parent="Foreground"]
-position = Vector2(609, 598)
+position = Vector2(609, 596)
 texture = ExtResource("12_xsqsu")
 
 [connection signal="body_entered" from="Checkpoint1" to="Checkpoint1" method="_on_body_entered"]
