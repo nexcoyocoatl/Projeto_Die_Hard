@@ -60,6 +60,9 @@ func _ready() -> void:
 	var foregroundNode = $Foreground
 	remove_child(foregroundNode)
 	add_child(foregroundNode)
+	
+	# TODO: Fazer o mesmo com o feedback_layer do NPC, mas pra isso,
+	# esse label precisa estar no level ao invés do NPC pra ser removido e adicionado de novo.
 		
 func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
