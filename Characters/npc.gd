@@ -23,6 +23,8 @@ enum Direction {
 var tilemap_layer : TileMapLayer = null
 var player : CharacterBody2D = null
 
+var animation_sprite : AnimatedSprite2D = null
+
 # Pathfinding
 @export_category("Script Exports")
 @export_group("Pathfinding")
@@ -82,10 +84,14 @@ func _ready() -> void:
 	# TODO: Temporário? (ver outra forma, talvez?)
 	if (path.name.contains("Shooter")):
 		npc_type = NpcType.SHOOTER
-		$Sprite2D.modulate = Color(1.0, 0.47, 0.47, 1.0)
+		$ShooterSprite.modulate.a = 1.0
+		$FighterSprite.modulate.a = 0.0
+		animation_sprite = $ShooterSprite
 	elif (path.name.contains("Fighter")):
 		npc_type = NpcType.FIGHTER
-		$Sprite2D.modulate = Color(0.85, 1.0, 0.47, 1.0)
+		$FighterSprite.modulate.a = 1.0
+		$ShooterSprite.modulate.a = 0.0
+		animation_sprite = $FighterSprite
 	
 	# Vision Cone
 	cone_ray = $ConeRay
@@ -142,12 +148,16 @@ func _process(_delta) -> void:
 				match direction:
 					Direction.UP:
 						cone_ray.rotation_degrees = 270
+						animation_sprite.play("Front")
 					Direction.DOWN:
 						cone_ray.rotation_degrees = 90
+						animation_sprite.play("Back")
 					Direction.LEFT:
 						cone_ray.rotation_degrees = 180
+						animation_sprite.play("Left")
 					Direction.RIGHT:
 						cone_ray.rotation_degrees = 0
+						animation_sprite.play("Right")
 				
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
