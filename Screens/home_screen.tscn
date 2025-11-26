@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://dfic173o5nyos"]
 
-[ext_resource type="Texture2D" uid="uid://bj3iv1j3vd07g" path="res://Textures/HomeScreen/Tela inicial.png" id="1_2l6lo"]
+[ext_resource type="Texture2D" uid="uid://bj3iv1j3vd07g" path="res://Textures/Tela inicial.png" id="1_2l6lo"]
 [ext_resource type="Script" uid="uid://ia1u0qma7msj" path="res://Screens/home_screen.gd" id="1_gna5p"]
-[ext_resource type="Texture2D" uid="uid://bfnbbbj1xproa" path="res://Textures/HomeScreen/Botão de play.png" id="2_6t2h2"]
-[ext_resource type="Texture2D" uid="uid://df76yam2awpgy" path="res://Textures/HomeScreen/Botão de exit.png" id="3_gna5p"]
+[ext_resource type="Texture2D" uid="uid://bfnbbbj1xproa" path="res://Textures/Botão de play.png" id="2_6t2h2"]
+[ext_resource type="Texture2D" uid="uid://df76yam2awpgy" path="res://Textures/Botão de exit.png" id="3_gna5p"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_75kvq"]
 
@@ -17,7 +17,7 @@ tracks/0/path = NodePath("HomeScreen_Title:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.566667),
+"times": PackedFloat32Array(0, 0.366667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -29,7 +29,7 @@ tracks/1/path = NodePath("VBoxContainer:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.333333, 0.933333),
+"times": PackedFloat32Array(0.233333, 0.733333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]

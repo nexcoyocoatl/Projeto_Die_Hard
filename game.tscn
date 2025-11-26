@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://eeirddr4r3aw" path="res://game.gd" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://db7t3hbot2qxq" path="res://Levels/level.tscn" id="2_e2o6t"]
-[ext_resource type="PackedScene" uid="uid://c6j5rxqqwk70k" path="res://Screens/game_over.tscn" id="2_fc0e3"]
+[ext_resource type="PackedScene" uid="uid://cweuhbaabmed0" path="res://Screens/game_over.tscn" id="2_feb5d"]
 
 [node name="Game" type="Node2D" groups=["Game"]]
 process_mode = 3
 script = ExtResource("1_e2o6t")
-game_over_scene = ExtResource("2_fc0e3")
+game_over_scene = ExtResource("2_feb5d")
 
 [node name="Level" parent="." instance=ExtResource("2_e2o6t")]

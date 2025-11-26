@@ -1,19 +1,24 @@
-[gd_scene load_steps=6 format=3 uid="uid://c6j5rxqqwk70k"]
+[gd_scene load_steps=10 format=3 uid="uid://cweuhbaabmed0"]
 
-[ext_resource type="Script" uid="uid://dlbv48svo7gfb" path="res://Screens/game_over.gd" id="1_onka8"]
-[ext_resource type="Texture2D" uid="uid://sjlmvl1fwk8v" path="res://Textures/GameOver.png" id="1_rqsc4"]
+[ext_resource type="Script" uid="uid://c8di47hprfpi5" path="res://Screens/game_over.gd" id="1_b5vis"]
+[ext_resource type="Texture2D" uid="uid://1a2fpouternn" path="res://Textures/Tela.png" id="1_j377t"]
+[ext_resource type="Texture2D" uid="uid://cpfgg33esy5aq" path="res://Textures/Game over 3.png" id="2_b5vis"]
+[ext_resource type="Texture2D" uid="uid://chkvvr881vqlc" path="res://Textures/Botão de restart.png" id="3_vkrq6"]
+[ext_resource type="Texture2D" uid="uid://c2mviabc4htf7" path="res://Textures/Botão de quit.png" id="4_7wiov"]
 
-[sub_resource type="Animation" id="Animation_y26ei"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i35y0"]
+
+[sub_resource type="Animation" id="Animation_5dqdo"]
 resource_name = "GameOver"
-length = 10.001
+length = 11.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CenterContainer/VBoxContainer:modulate")
+tracks/0/path = NodePath("Tela_Title:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.233333, 0.533333),
+"times": PackedFloat32Array(0.1, 0.433333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -21,22 +26,34 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("ColorRect:color")
+tracks/1/path = NodePath("GameOver_Title:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.1, 0.4),
+"times": PackedFloat32Array(0.2, 0.666667),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(0, 0, 0, 0), Color(0, 0.117647, 0.0588235, 0.498039)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0999999, 0.833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_yxx3c"]
+[sub_resource type="Animation" id="Animation_8vjis"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CenterContainer/VBoxContainer:modulate")
+tracks/0/path = NodePath("Tela_Title:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -48,80 +65,90 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("ColorRect:color")
+tracks/1/path = NodePath("GameOver_Title:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(0, 0, 0, 0.470588)]
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_ccer4"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vgfo5"]
 _data = {
-&"GameOver": SubResource("Animation_y26ei"),
-&"RESET": SubResource("Animation_yxx3c")
+&"GameOver": SubResource("Animation_5dqdo"),
+&"RESET": SubResource("Animation_8vjis")
 }
 
-[node name="GameOver" type="CanvasLayer"]
-script = ExtResource("1_onka8")
+[node name="GameOverCorreto" type="CanvasLayer"]
+script = ExtResource("1_b5vis")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Tela_Title" type="TextureRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.470588)
+texture = ExtResource("1_j377t")
+expand_mode = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-modulate = Color(1, 1, 1, 0.482353)
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -333.0
-offset_right = 334.0
-offset_bottom = 482.0
+[node name="GameOver_Title" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.228299
+anchor_top = -0.0262346
+anchor_right = 0.753472
+anchor_bottom = 0.675926
 grow_horizontal = 2
+texture = ExtResource("2_b5vis")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -257.5
+offset_top = -283.0
+offset_right = 257.5
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Restart_Btn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+icon = ExtResource("3_vkrq6")
+flat = true
 
-[node name="GameOver_Title" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-texture = ExtResource("1_rqsc4")
+theme_override_styles/separator = SubResource("StyleBoxEmpty_i35y0")
 
-[node name="Restart_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
-modulate = Color(1, 0, 0.0627451, 1)
-self_modulate = Color(0.947406, 3.77826e-06, 1.73271e-06, 0.705882)
-texture_filter = 3
-texture_repeat = 3
+[node name="Quit_Btn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-localize_numeral_system = false
-theme_override_font_sizes/font_size = 30
-text = "Restart"
-icon_alignment = 1
+icon = ExtResource("4_7wiov")
+flat = true
 
-[node name="Quit_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
-modulate = Color(1, 0, 0.0627451, 1)
-self_modulate = Color(0.94902, 0, 0, 0.705882)
-texture_filter = 3
-texture_repeat = 3
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 30
-text = "Quit"
-
-[node name="Animation" type="AnimationPlayer" parent="CenterContainer"]
-root_node = NodePath("../..")
+[node name="Animation" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_ccer4")
+&"": SubResource("AnimationLibrary_vgfo5")
 }
 autoplay = "GameOver"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Restart_Btn" to="." method="_on_restart_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit_Btn" to="." method="_on_quit_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Restart_Btn" to="." method="_on_restart_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit_Btn" to="." method="_on_quit_btn_pressed"]

@@ -1,122 +1,137 @@
-[gd_scene load_steps=6 format=3 uid="uid://byl12jyi573aa"]
+[gd_scene load_steps=10 format=3 uid="uid://bi2nyftw6c4u0"]
 
-[ext_resource type="Script" uid="uid://bhpuno7c5un2s" path="res://Screens/you_win.gd" id="1_vkac0"]
-[ext_resource type="Texture2D" uid="uid://b17x6h6b0kgyr" path="res://Textures/YouWin.png" id="1_w5032"]
+[ext_resource type="Texture2D" uid="uid://1a2fpouternn" path="res://Textures/Tela.png" id="1_3dm3i"]
+[ext_resource type="Script" uid="uid://djmk2qtxc4epx" path="res://Screens/you_win.gd" id="1_ykqjh"]
+[ext_resource type="Texture2D" uid="uid://paa3gg2eqx1b" path="res://Textures/You win 3.png" id="2_ij6xi"]
+[ext_resource type="Texture2D" uid="uid://c3fi5l7v5onjm" path="res://Textures/Botão de next level.png" id="3_qhkoa"]
+[ext_resource type="Texture2D" uid="uid://c2mviabc4htf7" path="res://Textures/Botão de quit.png" id="4_ykqjh"]
 
-[sub_resource type="Animation" id="Animation_w5032"]
-resource_name = "NextLevel"
-length = 10.047
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("..:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0.3, 0.6),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../../../ColorRect:color")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.0666667, 0.366667),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.0470588, 0.121569, 0.0862745, 0), Color(0.0470588, 0.121569, 0.0862745, 0.580392)]
-}
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x1b7e"]
 
-[sub_resource type="Animation" id="Animation_vkac0"]
+[sub_resource type="Animation" id="Animation_qhkoa"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("..:modulate")
+tracks/0/path = NodePath("YouWin_Title:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0.1, 0.533333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ykqjh"]
+resource_name = "YouWin"
+length = 11.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Tela_Title:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.0666667, 0.466667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.054902), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("../../../ColorRect:color")
+tracks/1/path = NodePath("YouWin_Title:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0.3, 0.833333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(0.0470588, 0.121569, 0.0862745, 0.713726)]
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("VBoxContainer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.633333, 1.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_rlycu"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_diak3"]
 _data = {
-&"NextLevel": SubResource("Animation_w5032"),
-&"RESET": SubResource("Animation_vkac0")
+&"RESET": SubResource("Animation_qhkoa"),
+&"YouWin": SubResource("Animation_ykqjh")
 }
 
-[node name="YouWin" type="CanvasLayer"]
-script = ExtResource("1_vkac0")
+[node name="YouWinCorreto" type="CanvasLayer"]
+script = ExtResource("1_ykqjh")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Tela_Title" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.054902)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0470588, 0.121569, 0.0862745, 0.713726)
+texture = ExtResource("1_3dm3i")
+expand_mode = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="YouWin_Title" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = -1
+anchor_left = 0.250868
+anchor_top = 0.00154322
+anchor_right = 0.749132
+anchor_bottom = 0.621914
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_ij6xi")
+expand_mode = 2
+metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.932099
+anchor_right = 0.5
+anchor_bottom = 0.932099
+offset_left = -262.0
+offset_top = -264.0
+offset_right = 262.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="NextLevel_Btn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+icon = ExtResource("3_qhkoa")
+flat = true
 
-[node name="YouWin_Title" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-texture = ExtResource("1_w5032")
+theme_override_styles/separator = SubResource("StyleBoxEmpty_x1b7e")
 
-[node name="NextLevel_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
-modulate = Color(1, 0, 0.0627451, 1)
-self_modulate = Color(0.94902, 0, 0, 0.705882)
-texture_filter = 3
-texture_repeat = 3
+[node name="Quit_Btn" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 20
-text = "Next Level"
+icon = ExtResource("4_ykqjh")
+flat = true
 
-[node name="Quit_Btn" type="Button" parent="CenterContainer/VBoxContainer"]
-modulate = Color(1, 0, 0.0627451, 1)
-self_modulate = Color(0.94902, 0, 0, 0.705882)
-texture_filter = 3
-texture_repeat = 3
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 20
-text = "Quit"
-
-[node name="Animation" type="AnimationPlayer" parent="CenterContainer"]
-root_node = NodePath("../VBoxContainer/NextLevel_Btn")
+[node name="Animation" type="AnimationPlayer" parent="."]
 libraries = {
-&"": SubResource("AnimationLibrary_rlycu")
+&"": SubResource("AnimationLibrary_diak3")
 }
-autoplay = "NextLevel"
+autoplay = "YouWin"
+speed_scale = 2.57
+movie_quit_on_finish = true
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/NextLevel_Btn" to="." method="_on_next_level_btn_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit_Btn" to="." method="_on_quit_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/NextLevel_Btn" to="." method="_on_next_level_btn_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit_Btn" to="." method="_on_quit_btn_pressed"]
