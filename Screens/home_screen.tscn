@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://dfic173o5nyos"]
 
-[ext_resource type="Texture2D" uid="uid://bj3iv1j3vd07g" path="res://Textures/Tela inicial.png" id="1_2l6lo"]
+[ext_resource type="Texture2D" uid="uid://c875ci2nremw4" path="res://Textures/Tela inicial.png" id="1_2l6lo"]
 [ext_resource type="Script" uid="uid://ia1u0qma7msj" path="res://Screens/home_screen.gd" id="1_gna5p"]
-[ext_resource type="Texture2D" uid="uid://bfnbbbj1xproa" path="res://Textures/Botão de play.png" id="2_6t2h2"]
-[ext_resource type="Texture2D" uid="uid://df76yam2awpgy" path="res://Textures/Botão de exit.png" id="3_gna5p"]
+[ext_resource type="Texture2D" uid="uid://bae4fi7vcgtyo" path="res://Textures/Botão de play.png" id="2_6t2h2"]
+[ext_resource type="Texture2D" uid="uid://dusb5i1vrondc" path="res://Textures/Botão de exit.png" id="3_gna5p"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_75kvq"]
 

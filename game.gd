@@ -36,7 +36,6 @@ func _input(event: InputEvent) -> void:
 			if (pause_time):
 				# TODO: Fazer alguma coisa?
 				pass
-
 			# Direção do movimento
 			# Só funciona quando acabar o cooldown E o mundo estiver parado E o jogador estiver vivo
 			if (!world_moving and move_cooldown_timer <= 0 and !player.is_dead):
@@ -111,12 +110,16 @@ func move_world():
 	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
 	
-func goto_scene(path: String):
-	current_scene.free()
-	var new_scene : PackedScene = ResourceLoader.load(path)
+func change_level(path: String):
+	current_scene.queue_free()  # Remove TUDO do level anterior de uma vez
+	await get_tree().process_frame  # Importantíssimo!
+	var new_scene := load(path)
 	current_scene = new_scene.instantiate()
-	#scene_limit = null # indica a troca de cena
 	add_child(current_scene)
+	await get_tree().process_frame  # Para o Player aparecer no grupo
+	player = get_tree().get_nodes_in_group("Player")[0]
+	if player:
+		player.player_died.connect(_on_player_died)
 	
 func _on_player_died():
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
