@@ -1,20 +1,21 @@
-[gd_scene load_steps=36 format=4 uid="uid://db7t3hbot2qxq"]
+[gd_scene load_steps=37 format=4 uid="uid://db7t3hbot2qxq"]
 
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_1ainy"]
-[ext_resource type="Texture2D" uid="uid://btdcdfgitwhuu" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
-[ext_resource type="Texture2D" uid="uid://sfgthdf655on" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
+[ext_resource type="Texture2D" uid="uid://co1ikmnm87g7y" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
+[ext_resource type="Texture2D" uid="uid://b7vea537usp6f" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
 [ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="8_0et7e"]
-[ext_resource type="Texture2D" uid="uid://yfnebiq85u4u" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
-[ext_resource type="Texture2D" uid="uid://1q6k5pxrqx5f" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
-[ext_resource type="Texture2D" uid="uid://b4do61tnr2xs" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
+[ext_resource type="Texture2D" uid="uid://blj0uokpyl373" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
+[ext_resource type="Texture2D" uid="uid://dx4mxnbx4c6kn" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
+[ext_resource type="Texture2D" uid="uid://uhitve0vtxdq" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
+[ext_resource type="PackedScene" uid="uid://bebxe02glmvp" path="res://hostage.tscn" id="14_3hgmi"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dvejp"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -34,19 +35,19 @@ texture_region_size = Vector2i(32, 32)
 2:3/0 = 0
 3:3/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3hgmi"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ryrav"]
 texture = ExtResource("2_1ainy")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/modulate = Color(1, 1, 1, 0.216)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xsqsu"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j5wjh"]
 texture = ExtResource("3_n6hdu")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vmy0u"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_km5ld"]
 texture = ExtResource("5_n6hdu")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
@@ -54,10 +55,10 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_7jktm"]
 tile_size = Vector2i(32, 32)
 physics_layer_0/collision_layer = 1
-sources/1 = SubResource("TileSetAtlasSource_3hgmi")
-sources/0 = SubResource("TileSetAtlasSource_dvejp")
-sources/3 = SubResource("TileSetAtlasSource_xsqsu")
-sources/4 = SubResource("TileSetAtlasSource_vmy0u")
+sources/1 = SubResource("TileSetAtlasSource_ryrav")
+sources/0 = SubResource("TileSetAtlasSource_eow3j")
+sources/3 = SubResource("TileSetAtlasSource_j5wjh")
+sources/4 = SubResource("TileSetAtlasSource_km5ld")
 
 [sub_resource type="Curve2D" id="Curve2D_km5ld"]
 _data = {
@@ -185,6 +186,9 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 editor_draw_limits = true
 editor_draw_drag_margin = true
+
+[node name="Hostage" parent="." instance=ExtResource("14_3hgmi")]
+position = Vector2(-240, 1168)
 
 [node name="Line2D" type="Line2D" parent="."]
 points = PackedVector2Array(-40, -32)

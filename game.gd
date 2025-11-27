@@ -5,7 +5,8 @@ extends Node2D
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
 @export_group("Scenes")
-@export var game_over_scene: PackedScene
+@export var game_over_scene: PackedScene 
+
 
 var input_direction : Vector2				# Direção de movimento do jogador
 var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movimento
@@ -14,8 +15,11 @@ var action_points : int = 0
 var player_action_queue = []
 @onready var world_moving : bool = false
 @onready var player : Player
+@onready var hostage_label = get_node_or_null("HUD/HostageLabel")
+var current_scene : Level = null 
 
-var current_scene : Level = null
+var hostages_rescued : int = 0
+var total_hostages : int = 0
 
 func _ready() -> void:
 	world_moving = false
@@ -23,7 +27,12 @@ func _ready() -> void:
 	#pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
 	player = get_tree().get_nodes_in_group("Player")[0]
 	if player:
-		player.player_died.connect(_on_player_died)
+		player.player_died.connect(_on_player_died) 
+		
+	# ADICIONE ISTO NO FINAL DO _READY:
+	# Conta quantos reféns existem na fase assim que o jogo começa
+	# (Dá um pequeno delay para garantir que todos foram carregados)
+	call_deferred("count_hostages")
 
 # Ativa movimentos pelo input, que funciona por eventos de botões pressionados
 func _input(event: InputEvent) -> void:
@@ -36,6 +45,7 @@ func _input(event: InputEvent) -> void:
 			if (pause_time):
 				# TODO: Fazer alguma coisa?
 				pass
+
 			# Direção do movimento
 			# Só funciona quando acabar o cooldown E o mundo estiver parado E o jogador estiver vivo
 			if (!world_moving and move_cooldown_timer <= 0 and !player.is_dead):
@@ -110,20 +120,34 @@ func move_world():
 	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
 	
-func change_level(path: String):
-	current_scene.queue_free()  # Remove TUDO do level anterior de uma vez
-	await get_tree().process_frame  # Importantíssimo!
-	var new_scene := load(path)
+func goto_scene(path: String):
+	current_scene.free()
+	var new_scene : PackedScene = ResourceLoader.load(path)
 	current_scene = new_scene.instantiate()
+	#scene_limit = null # indica a troca de cena
 	add_child(current_scene)
-	await get_tree().process_frame  # Para o Player aparecer no grupo
-	player = get_tree().get_nodes_in_group("Player")[0]
-	if player:
-		player.player_died.connect(_on_player_died)
 	
 func _on_player_died():
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
 		get_tree().root.add_child.call_deferred(game_over_scene.instantiate())
 	else:
-		get_tree().reload_current_scene()
+		get_tree().reload_current_scene() 
+
+func count_hostages():
+	# Procura todos os nós que estão no grupo "Hostages"
+	var hostages = get_tree().get_nodes_in_group("Hostages")
+	total_hostages = hostages.size()
+	hostages_rescued = 0
+	update_hostage_ui()
+
+# Esta função é chamada pelo hostage.gd quando o jogador pisa nele
+func hostage_rescued():
+	hostages_rescued += 1
+	update_hostage_ui()
+	
+	if (GlobalVariables.DEBUG): print("Refém salvo! Total: ", hostages_rescued)
+
+func update_hostage_ui():
+	if hostage_label:
+		hostage_label.text = "Reféns: " + str(hostages_rescued) + "/" + str(total_hostages)		
