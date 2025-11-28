@@ -120,7 +120,7 @@ func _process(_delta) -> void:
 	if (player_found):
 		player_found = false
 		
-		if not alert:
+		if not alert and (mode != Mode.FOLLOW):
 			$Alert.play()
 		
 		alert = true
