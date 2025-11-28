@@ -60,9 +60,6 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("7_8lpux")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_kujwk")
 }],
 "loop": false,
 "name": &"Back",
@@ -70,10 +67,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_5hipt")
+"texture": ExtResource("8_kujwk")
+}],
+"loop": true,
+"name": &"BackAim",
+"speed": 5.0
 }, {
+"frames": [{
 "duration": 1.0,
-"texture": ExtResource("10_61gnx")
+"texture": ExtResource("9_5hipt")
 }],
 "loop": false,
 "name": &"Front",
@@ -81,10 +83,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("11_pmnlb")
+"texture": ExtResource("10_61gnx")
+}],
+"loop": true,
+"name": &"FrontAim",
+"speed": 5.0
 }, {
+"frames": [{
 "duration": 1.0,
-"texture": ExtResource("12_5tlyq")
+"texture": ExtResource("11_pmnlb")
 }],
 "loop": false,
 "name": &"Left",
@@ -92,13 +99,26 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("13_xn1sj")
+"texture": ExtResource("12_5tlyq")
+}],
+"loop": true,
+"name": &"LeftAim",
+"speed": 5.0
 }, {
+"frames": [{
 "duration": 1.0,
-"texture": ExtResource("14_k43o1")
+"texture": ExtResource("13_xn1sj")
 }],
 "loop": false,
 "name": &"Right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_k43o1")
+}],
+"loop": true,
+"name": &"RightAim",
 "speed": 5.0
 }]
 
@@ -153,7 +173,7 @@ animation = &"Right"
 modulate = Color(1, 1, 1, 0)
 position = Vector2(0, -17)
 sprite_frames = SubResource("SpriteFrames_qc5e3")
-animation = &"Back"
+animation = &"Left"
 
 [node name="Steps" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamInteractive_haaxj")

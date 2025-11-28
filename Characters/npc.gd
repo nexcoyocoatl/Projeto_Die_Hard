@@ -149,24 +149,66 @@ func _process(_delta) -> void:
 			if patrol_path.has(current_position) and patrol_path.size() == 2:
 				cone_ray.rotation_degrees = defaul_look_rotation
 			else:
-				match direction:
-					Direction.UP:
-						cone_ray.rotation_degrees = 270
-						animation_sprite.play("Front")
-					Direction.DOWN:
-						cone_ray.rotation_degrees = 90
-						animation_sprite.play("Back")
-					Direction.LEFT:
-						cone_ray.rotation_degrees = 180
-						animation_sprite.play("Left")
-					Direction.RIGHT:
-						cone_ray.rotation_degrees = 0
-						animation_sprite.play("Right")
+				match_animation_direction()
 				
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
-					
+	
+	match_animation_direction_without_cone()
 	create_cone()
+	
+
+# BAITA PORQUICE
+func match_animation_direction_without_cone():
+	match cone_ray.rotation_degrees:
+		270.0:
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("BackAim")
+			else:
+				animation_sprite.play("Back")
+		90.0:
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("FrontAim")
+			else:
+				animation_sprite.play("Front")
+		180.0:
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("LeftAim")
+			else:
+				animation_sprite.play("Left")
+		0.0:
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("RightAim")
+			else:
+				animation_sprite.play("Right")
+
+func match_animation_direction():
+	match direction:
+		Direction.UP:
+			cone_ray.rotation_degrees = 270
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("BackAim")
+			else:
+				animation_sprite.play("Back")
+		Direction.DOWN:
+			cone_ray.rotation_degrees = 90
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("FrontAim")
+			else:
+				animation_sprite.play("Front")
+		Direction.LEFT:
+			cone_ray.rotation_degrees = 180
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("LeftAim")
+			else:
+				animation_sprite.play("Left")
+		Direction.RIGHT:
+			cone_ray.rotation_degrees = 0
+			if (npc_type == NpcType.SHOOTER and (mode == Mode.FOLLOW or mode == Mode.AIMING)):
+				animation_sprite.play("RightAim")
+			else:
+				animation_sprite.play("Right")
+	
 
 # Cria polígono do cone de visão
 func create_cone():
