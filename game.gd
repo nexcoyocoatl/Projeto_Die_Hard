@@ -110,7 +110,8 @@ func move_world():
 	awaiting_done_confirmation += 1 # player
 	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
-	get_tree().call_group("Hostages", "receive_points")
+	get_tree().call_group("Hostages", "receive_points") 
+	AudioManager.play_sfx("pass_time")
 	
 func change_level(path: String):
 	current_scene.queue_free() 

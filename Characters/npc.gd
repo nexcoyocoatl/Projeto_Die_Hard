@@ -119,6 +119,10 @@ func _draw() -> void:
 func _process(_delta) -> void:
 	if (player_found):
 		player_found = false
+			# CORREÇÃO: Só toca se o NPC NÃO estava em alerta antes
+		if not alert:
+			AudioManager.play_sfx("alert")
+			
 		alert = true
 		detect_player()
 		cone_ray_angle = cone_ray_angle_alert
@@ -276,6 +280,7 @@ func patrol() -> void:
 		current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
 		
 	var target: Vector2 = Vector2(patrol_path[current_patrol_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+	AudioManager.play_sfx("npc_step")
 	var tween = create_tween()
 	
 	# Facing direction
@@ -351,6 +356,7 @@ func shoot():
 	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
 	feedback_label.visible = false
 	is_shooting = true # Ativa o cone vermelho
+	AudioManager.play_sfx("shoot")
 	
 	player.die()
 	
@@ -358,7 +364,7 @@ func shoot():
 
 func attack_melee():
 	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
-	
+	AudioManager.play_sfx("attack")
 	player.die()
 	
 	move_finished()

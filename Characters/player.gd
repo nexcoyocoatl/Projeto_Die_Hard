@@ -73,7 +73,8 @@ func move():
 	if (input_direction != Vector2.ZERO): # se player mudou de posição (podemos adicionar outras ações)
 		noise.monitoring = true
 	
-	var cell : Vector2i = (position/GlobalVariables.TILE_SIZE + input_direction).floor()
+	var cell : Vector2i = (position/GlobalVariables.TILE_SIZE + input_direction).floor() 
+	AudioManager.play_sfx("player_step")
 	var tween = create_tween()
 
 	# TODO: muito ineficiente e contém bug na parte superior e a esquerda do mapa (avança um tile a mais)
