@@ -112,13 +112,13 @@ func load_checkpoint() -> bool:
 		for h : Hostage in get_tree().get_nodes_in_group("Hostages"):
 			h.queue_free()
 			await get_tree().process_frame 
-			
-		for hostage_position in CheckpointManager.hostage_positions.keys():
-			var hostage : Hostage = hostage_scene.instantiate()
-			hostage.add_to_group("Hostages")
-			hostage.position = hostage_position
-			add_child(hostage)
 		hostages_rescued = CheckpointManager.hostages_rescued
+		if hostages_rescued == 0:
+			for hostage_position in CheckpointManager.hostage_positions.keys():
+				var hostage : Hostage = hostage_scene.instantiate()
+				hostage.add_to_group("Hostages")
+				hostage.position = hostage_position
+				add_child(hostage)
 		var hostages = get_tree().get_nodes_in_group("Hostages")
 		for h in hostages:
 			if not h.rescued.is_connected(_on_hostage_rescued):

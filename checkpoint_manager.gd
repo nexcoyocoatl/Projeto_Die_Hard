@@ -40,7 +40,7 @@ func save(body : Player, respawn : Vector2) -> bool:
 	for hostage : Hostage in get_tree().get_nodes_in_group("Hostages"):
 		if hostage == null: continue
 		hostage_positions[hostage.position] = hostage.position
-		hostages_rescued = get_tree().get_first_node_in_group("Game").current_scene.hostages_rescued
+	hostages_rescued = get_tree().get_first_node_in_group("Game").current_scene.hostages_rescued
 	if (GlobalVariables.DEBUG): print("Saved")
 	return true
 	
