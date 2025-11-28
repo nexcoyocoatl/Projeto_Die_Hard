@@ -1,18 +1,226 @@
-[gd_scene load_steps=4 format=3 uid="uid://bebxe02glmvp"]
+[gd_scene load_steps=14 format=3 uid="uid://bebxe02glmvp"]
 
 [ext_resource type="Script" uid="uid://dqx1smn2lqlst" path="res://hostage.gd" id="1_2cphn"]
-[ext_resource type="Texture2D" uid="uid://dy6q3271qkqbk" path="res://hostage.svg" id="2_2cphn"]
+[ext_resource type="Texture2D" uid="uid://tcxrqpcs86kp" path="res://Characters/character_base.png" id="3_ovy40"]
+[ext_resource type="Texture2D" uid="uid://dysldb0epw1js" path="res://Characters/Sprites/Hostage/help_speech_baloon.png" id="4_u145w"]
+[ext_resource type="Texture2D" uid="uid://ckuknf81g8wdx" path="res://Characters/Sprites/Hostage/hostage1.png" id="5_lroxo"]
+[ext_resource type="Texture2D" uid="uid://14moaln771ji" path="res://Characters/Sprites/Hostage/hostage2.png" id="6_ngxey"]
+[ext_resource type="Texture2D" uid="uid://b08b880567h7j" path="res://Characters/Sprites/Hostage/hostage_wink.png" id="7_aa721"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgpst"]
 size = Vector2(32, 32)
 
+[sub_resource type="Animation" id="Animation_gef2w"]
+resource_name = "idle"
+
+[sub_resource type="Animation" id="Animation_3vynr"]
+resource_name = "jump"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [&"jump", &"default"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(2, -24), Vector2(2, -32), Vector2(2, -24)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HelpSpeechBaloon:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(36, -70), Vector2(36, -70)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HelpSpeechBaloon:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_e40ts"]
+resource_name = "saved"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(2, -24), Vector2(2, -54)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(-0.033333335, 0.4, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("AnimatedSprite2D:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.46666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [&"default", &"wink", &"default"]
+}
+
+[sub_resource type="Animation" id="Animation_yt68e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"default"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, -24)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HelpSpeechBaloon:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(36, -70)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HelpSpeechBaloon:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AnimatedSprite2D:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_brdyi"]
+_data = {
+&"RESET": SubResource("Animation_yt68e"),
+&"idle": SubResource("Animation_gef2w"),
+&"jump": SubResource("Animation_3vynr"),
+&"saved": SubResource("Animation_e40ts")
+}
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7oyv3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_lroxo")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_ngxey")
+}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_aa721")
+}],
+"loop": true,
+"name": &"wink",
+"speed": 5.0
+}]
+
 [node name="Hostage" type="Area2D" groups=["Hostages"]]
 script = ExtResource("1_2cphn")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -24)
-scale = Vector2(0.75, 0.75)
-texture = ExtResource("2_2cphn")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_xgpst")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_brdyi")
+}
+
+[node name="CharacterBase" type="Sprite2D" parent="."]
+position = Vector2(0, -17)
+texture = ExtResource("3_ovy40")
+
+[node name="HelpSpeechBaloon" type="Sprite2D" parent="."]
+position = Vector2(36, -70)
+scale = Vector2(0.27272728, 0.27272728)
+texture = ExtResource("4_u145w")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(2, -24)
+sprite_frames = SubResource("SpriteFrames_7oyv3")
