@@ -4,6 +4,10 @@ class_name Level
 var logical_tilemap : TileMapLayer
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
 var player : Player
+var hostage_scene : PackedScene = preload("res://hostage.tscn")
+var hostages_rescued : int = 0
+var total_hostages : int = 0
+@onready var hostage_label = $HUD/HostageLabel
 
 func init_pathgrid():
 	# Pathfinding
@@ -61,8 +65,8 @@ func _ready() -> void:
 	remove_child(foregroundNode)
 	add_child(foregroundNode)
 	
-	# TODO: Fazer o mesmo com o feedback_layer do NPC, mas pra isso,
-	# esse label precisa estar no level ao invés do NPC pra ser removido e adicionado de novo.
+	call_deferred("count_hostages")
+
 		
 func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
@@ -104,6 +108,35 @@ func load_checkpoint() -> bool:
 					npc.last_player_position = data["last_player_position"]
 				if data.has("feedback_label_visible"):
 					npc.feedback_label.visible = data["feedback_label_visible"]
-					
+		
+		for hostage_position in CheckpointManager.hostage_positions.keys():
+			var hostage : Hostage = hostage_scene.instantiate()
+			hostage.add_to_group("Hostages")
+			hostage.position = hostage_position
+			add_child(hostage)
+		hostages_rescued = CheckpointManager.hostages_rescued
+		var hostages = get_tree().get_nodes_in_group("Hostages")
+		for h in hostages:
+			h.rescued.connect(_on_hostage_rescued)
+		update_hostage_ui()
+
 		return true
 	return false
+	
+func count_hostages():
+	var hostages = get_tree().get_nodes_in_group("Hostages")
+	for h in hostages:
+		h.rescued.connect(_on_hostage_rescued)
+	total_hostages = hostages.size()
+	hostages_rescued = 0
+	update_hostage_ui()
+
+func _on_hostage_rescued():
+	hostages_rescued += 1
+	update_hostage_ui()
+	
+	if (GlobalVariables.DEBUG): print("Refém salvo! Total: ", hostages_rescued)
+
+func update_hostage_ui():
+	if hostage_label:
+		hostage_label.text = "Reféns: " + str(hostages_rescued) + "/" + str(total_hostages)

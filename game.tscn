@@ -9,11 +9,4 @@ process_mode = 3
 script = ExtResource("1_e2o6t")
 game_over_scene = ExtResource("2_feb5d")
 
-[node name="HUD" type="CanvasLayer" parent="."]
-
-[node name="HostageLabel" type="Label" parent="HUD"]
-offset_right = 40.0
-offset_bottom = 23.0
-metadata/_edit_use_anchors_ = true
-
 [node name="Level" parent="." instance=ExtResource("2_e2o6t")]

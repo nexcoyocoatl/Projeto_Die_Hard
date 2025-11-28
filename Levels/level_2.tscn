@@ -284,6 +284,13 @@ texture = ExtResource("12_7g2g1")
 position = Vector2(609, 597)
 texture = ExtResource("13_fll1h")
 
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HostageLabel" type="Label" parent="HUD"]
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
+
 [connection signal="body_entered" from="Checkpoint1" to="Checkpoint1" method="_on_body_entered"]
 [connection signal="body_entered" from="Checkpoint2" to="Checkpoint2" method="_on_body_entered"]
 [connection signal="body_entered" from="Checkpoint3" to="Checkpoint3" method="_on_body_entered"]

@@ -3,17 +3,17 @@
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_1ainy"]
-[ext_resource type="Texture2D" uid="uid://co1ikmnm87g7y" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
-[ext_resource type="Texture2D" uid="uid://b7vea537usp6f" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
+[ext_resource type="Texture2D" uid="uid://btdcdfgitwhuu" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
+[ext_resource type="Texture2D" uid="uid://sfgthdf655on" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
 [ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="8_0et7e"]
-[ext_resource type="Texture2D" uid="uid://blj0uokpyl373" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
-[ext_resource type="Texture2D" uid="uid://dx4mxnbx4c6kn" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
-[ext_resource type="Texture2D" uid="uid://uhitve0vtxdq" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
-[ext_resource type="PackedScene" uid="uid://bebxe02glmvp" path="res://hostage.tscn" id="14_3hgmi"]
+[ext_resource type="Texture2D" uid="uid://yfnebiq85u4u" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
+[ext_resource type="Texture2D" uid="uid://1q6k5pxrqx5f" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
+[ext_resource type="Texture2D" uid="uid://b4do61tnr2xs" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
+[ext_resource type="PackedScene" path="res://hostage.tscn" id="14_3hgmi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -287,6 +287,13 @@ texture = ExtResource("11_3hgmi")
 [node name="LightsLayer" type="Sprite2D" parent="Foreground"]
 position = Vector2(609, 597)
 texture = ExtResource("12_xsqsu")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="HostageLabel" type="Label" parent="HUD"]
+offset_right = 40.0
+offset_bottom = 23.0
+metadata/_edit_use_anchors_ = true
 
 [connection signal="body_entered" from="Checkpoint1" to="Checkpoint1" method="_on_body_entered"]
 [connection signal="body_entered" from="Checkpoint2" to="Checkpoint2" method="_on_body_entered"]

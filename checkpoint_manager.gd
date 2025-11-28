@@ -2,6 +2,13 @@ extends Node
 
 var player_checkpoint_positions : Dictionary = {}
 var npc_checkpoint_data : Dictionary = {}
+var hostage_positions : Dictionary = {}
+var hostages_rescued : int = 0
+
+func clear():
+	player_checkpoint_positions.clear()
+	npc_checkpoint_data.clear()
+	hostage_positions.clear()
 
 func save(body : Player, respawn : Vector2) -> bool:
 	for npc : Npc in get_tree().get_nodes_in_group("Npcs"):
@@ -29,6 +36,11 @@ func save(body : Player, respawn : Vector2) -> bool:
 			"last_player_position" : npc.last_player_position,
 			"feedback_label_visible" : npc.feedback_label.visible
 		}
+		
+	for hostage : Hostage in get_tree().get_nodes_in_group("Hostages"):
+		if hostage == null: continue
+		hostage_positions[hostage.position] = hostage.position
+		hostages_rescued = get_tree().get_first_node_in_group("Game").current_scene.hostages_rescued
 	print("Saved")
 	return true
 	
