@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="6_0ttnk"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="7_v3vm6"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="8_16yl7"]
-[ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="9_3slvs"]
+[ext_resource type="PackedScene" uid="uid://cmdwj8wdapnhh" path="res://Screens/end_game.tscn" id="9_4pbjs"]
 [ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="10_cnrwi"]
 [ext_resource type="Texture2D" uid="uid://1q6k5pxrqx5f" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_knkse"]
 [ext_resource type="Texture2D" uid="uid://yfnebiq85u4u" path="res://Backgrounds/Level1/Level1_top.png" id="12_7g2g1"]
@@ -178,7 +178,7 @@ tile_map_data = PackedByteArray("AAAAAAYAAQAAAAAAAAAAAAoAAQAAAAAAAAAAAAsAAQAAAAA
 tile_set = SubResource("TileSet_ldfcd")
 
 [node name="Player" parent="." instance=ExtResource("8_16yl7")]
-position = Vector2(1136, 1296)
+position = Vector2(1384, 1152)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 drag_horizontal_enabled = true
@@ -191,8 +191,8 @@ points = PackedVector2Array(-40, -32)
 width = 1.0
 default_color = Color(1, 0, 0, 1)
 
-[node name="LevelEnd" parent="." instance=ExtResource("9_3slvs")]
-position = Vector2(1504, 1056)
+[node name="EndGame" parent="." instance=ExtResource("9_4pbjs")]
+position = Vector2(1496, 1056)
 
 [node name="Fighter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_41lt0")

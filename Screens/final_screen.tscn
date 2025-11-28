@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bqq0xdxv3ynde"]
+[gd_scene load_steps=5 format=3 uid="uid://xpy2b3xpswa3"]
 
-[ext_resource type="Texture2D" uid="uid://bjf37wsb8fye0" path="res://Textures/Tela final.png" id="1_c0adj"]
+[ext_resource type="Texture2D" uid="uid://bfpph8w0h1x5w" path="res://Textures/Tela final.png" id="1_e61cl"]
 
 [sub_resource type="Animation" id="Animation_c0adj"]
 resource_name = "FinalScreen"
@@ -39,17 +39,9 @@ _data = {
 &"RESET": SubResource("Animation_y755j")
 }
 
-[node name="FinalScreen" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_use_anchors_ = true
+[node name="FinalScreen" type="CanvasLayer"]
 
 [node name="FinalScreen_Title" type="TextureRect" parent="."]
-layout_mode = 1
 anchors_preset = -1
 anchor_left = -0.506077
 anchor_top = -0.444444
@@ -61,7 +53,7 @@ offset_right = -384.0
 offset_bottom = -216.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_c0adj")
+texture = ExtResource("1_e61cl")
 expand_mode = 3
 metadata/_edit_use_anchors_ = true
 

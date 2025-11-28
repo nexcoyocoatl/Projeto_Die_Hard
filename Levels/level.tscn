@@ -13,7 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://yfnebiq85u4u" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
 [ext_resource type="Texture2D" uid="uid://1q6k5pxrqx5f" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
 [ext_resource type="Texture2D" uid="uid://b4do61tnr2xs" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
-[ext_resource type="PackedScene" path="res://hostage.tscn" id="14_3hgmi"]
+[ext_resource type="PackedScene" uid="uid://bebxe02glmvp" path="res://hostage.tscn" id="14_3hgmi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
 texture = ExtResource("1_f2txt")
@@ -179,7 +179,7 @@ tile_map_data = PackedByteArray("AAAAAAYAAQAAAAAAAAAAAAoAAQAAAAAAAAAAAAsAAQAAAAA
 tile_set = SubResource("TileSet_7jktm")
 
 [node name="Player" parent="." instance=ExtResource("4_km5ld")]
-position = Vector2(1168, 1296)
+position = Vector2(1344, 1176)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 drag_horizontal_enabled = true
@@ -196,7 +196,7 @@ width = 1.0
 default_color = Color(1, 0, 0, 1)
 
 [node name="LevelEnd" parent="." instance=ExtResource("6_1ainy")]
-position = Vector2(1504, 1056)
+position = Vector2(1496, 1056)
 
 [node name="Fighter1" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_km5ld")
