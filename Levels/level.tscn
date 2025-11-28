@@ -1,18 +1,19 @@
-[gd_scene load_steps=37 format=4 uid="uid://db7t3hbot2qxq"]
+[gd_scene load_steps=41 format=4 uid="uid://db7t3hbot2qxq"]
 
 [ext_resource type="Script" uid="uid://davabipaeciwa" path="res://Levels/level.gd" id="1_1ainy"]
 [ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="1_f2txt"]
 [ext_resource type="Texture2D" uid="uid://nqs2fx680340" path="res://Textures/Tiles/tile_logico.svg" id="2_1ainy"]
-[ext_resource type="Texture2D" uid="uid://btdcdfgitwhuu" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
-[ext_resource type="Texture2D" uid="uid://sfgthdf655on" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
+[ext_resource type="Texture2D" uid="uid://bpke8xrntljl3" path="res://Backgrounds/Level1/Level1_floor.png" id="2_eabcg"]
+[ext_resource type="Texture2D" uid="uid://b21ej5uqjyqbc" path="res://Backgrounds/Level1/Level1_bottom.png" id="3_dvejp"]
 [ext_resource type="Texture2D" uid="uid://dw2kh7obxooli" path="res://Textures/Tiles/tile_collision.svg" id="3_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://clbdybjufnd0r" path="res://Characters/player.tscn" id="4_km5ld"]
 [ext_resource type="Texture2D" uid="uid://cg874udpb5m23" path="res://Textures/Tiles/tile_logico_old.svg" id="5_n6hdu"]
 [ext_resource type="PackedScene" uid="uid://d0j4cwmip0v3u" path="res://Levels/level_end.tscn" id="6_1ainy"]
 [ext_resource type="Script" uid="uid://bwp2rb2utimfg" path="res://checkpoint.gd" id="8_0et7e"]
-[ext_resource type="Texture2D" uid="uid://yfnebiq85u4u" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
-[ext_resource type="Texture2D" uid="uid://1q6k5pxrqx5f" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
-[ext_resource type="Texture2D" uid="uid://b4do61tnr2xs" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
+[ext_resource type="Texture2D" uid="uid://dqp5l1lrgi4hf" path="res://Backgrounds/Level1/Level1_top.png" id="11_3hgmi"]
+[ext_resource type="Texture2D" uid="uid://bju3gm0c3sxwu" path="res://Backgrounds/Level1/Level1_top-translucent.png" id="11_dvejp"]
+[ext_resource type="Texture2D" uid="uid://b8fsjya14mym6" path="res://Textures/Misc/checkpoint.png" id="12_vmy0u"]
+[ext_resource type="Texture2D" uid="uid://uhitve0vtxdq" path="res://Backgrounds/Level1/Level1_lightshadow.png" id="12_xsqsu"]
 [ext_resource type="PackedScene" uid="uid://bebxe02glmvp" path="res://hostage.tscn" id="14_3hgmi"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eow3j"]
@@ -147,6 +148,66 @@ point_count = 2
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ecu0b"]
 size = Vector2(64, 16)
 
+[sub_resource type="Animation" id="Animation_tnhlw"]
+resource_name = "spawn_checkpoint_sprite"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.23333333, 0.76666665),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -24)]
+}
+
+[sub_resource type="Animation" id="Animation_s20m7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_q25r3"]
+_data = {
+&"RESET": SubResource("Animation_s20m7"),
+&"spawn_checkpoint_sprite": SubResource("Animation_tnhlw")
+}
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_63wrd"]
 size = Vector2(192, 16)
 
@@ -179,7 +240,7 @@ tile_map_data = PackedByteArray("AAAAAAYAAQAAAAAAAAAAAAoAAQAAAAAAAAAAAAsAAQAAAAA
 tile_set = SubResource("TileSet_7jktm")
 
 [node name="Player" parent="." instance=ExtResource("4_km5ld")]
-position = Vector2(1344, 1176)
+position = Vector2(1162, 1297)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 drag_horizontal_enabled = true
@@ -243,37 +304,6 @@ curve = SubResource("Curve2D_2orkt")
 [node name="Shooter5" type="Path2D" parent="." groups=["Paths"]]
 curve = SubResource("Curve2D_ait7k")
 
-[node name="Checkpoint1" type="Area2D" parent="."]
-position = Vector2(0, 720)
-script = ExtResource("8_0et7e")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
-shape = SubResource("RectangleShape2D_ecu0b")
-
-[node name="Respawn" type="Marker2D" parent="Checkpoint1"]
-position = Vector2(0, -32)
-
-[node name="Checkpoint2" type="Area2D" parent="."]
-position = Vector2(1056, 400)
-script = ExtResource("8_0et7e")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
-position = Vector2(0, -40)
-shape = SubResource("RectangleShape2D_63wrd")
-
-[node name="Respawn" type="Marker2D" parent="Checkpoint2"]
-position = Vector2(80, 8)
-
-[node name="Checkpoint3" type="Area2D" parent="."]
-position = Vector2(1136, 1304)
-script = ExtResource("8_0et7e")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint3"]
-shape = SubResource("RectangleShape2D_02vxb")
-
-[node name="Respawn" type="Marker2D" parent="Checkpoint3"]
-position = Vector2(-32, -8)
-
 [node name="Foreground" type="Node" parent="."]
 
 [node name="Level1TopTranslucent" type="Sprite2D" parent="Foreground"]
@@ -287,6 +317,57 @@ texture = ExtResource("11_3hgmi")
 [node name="LightsLayer" type="Sprite2D" parent="Foreground"]
 position = Vector2(609, 597)
 texture = ExtResource("12_xsqsu")
+
+[node name="Checkpoint1" type="Area2D" parent="."]
+position = Vector2(0, 720)
+script = ExtResource("8_0et7e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint1"]
+shape = SubResource("RectangleShape2D_ecu0b")
+
+[node name="Respawn" type="Marker2D" parent="Checkpoint1"]
+position = Vector2(0, -32)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Checkpoint1"]
+root_node = NodePath("../CheckpointSprite")
+libraries = {
+&"": SubResource("AnimationLibrary_q25r3")
+}
+
+[node name="CheckpointSprite" type="Sprite2D" parent="Checkpoint1"]
+scale = Vector2(0.3222222, 0.32222223)
+texture = ExtResource("12_vmy0u")
+
+[node name="Checkpoint2" type="Area2D" parent="."]
+position = Vector2(1056, 400)
+script = ExtResource("8_0et7e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint2"]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_63wrd")
+
+[node name="Respawn" type="Marker2D" parent="Checkpoint2"]
+position = Vector2(80, 8)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Checkpoint2"]
+root_node = NodePath("../CheckpointSprite")
+libraries = {
+&"": SubResource("AnimationLibrary_q25r3")
+}
+
+[node name="CheckpointSprite" type="Sprite2D" parent="Checkpoint2"]
+scale = Vector2(0.3222222, 0.32222223)
+texture = ExtResource("12_vmy0u")
+
+[node name="Checkpoint3" type="Area2D" parent="."]
+position = Vector2(1136, 1304)
+script = ExtResource("8_0et7e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Checkpoint3"]
+shape = SubResource("RectangleShape2D_02vxb")
+
+[node name="Respawn" type="Marker2D" parent="Checkpoint3"]
+position = Vector2(-32, -8)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 

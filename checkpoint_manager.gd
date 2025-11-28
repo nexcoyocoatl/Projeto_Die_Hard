@@ -41,7 +41,7 @@ func save(body : Player, respawn : Vector2) -> bool:
 		if hostage == null: continue
 		hostage_positions[hostage.position] = hostage.position
 		hostages_rescued = get_tree().get_first_node_in_group("Game").current_scene.hostages_rescued
-	print("Saved")
+	if (GlobalVariables.DEBUG): print("Saved")
 	return true
 	
 func load_checkpoint():

@@ -135,8 +135,8 @@ func _on_hostage_rescued():
 	hostages_rescued += 1
 	update_hostage_ui()
 	
-	if (GlobalVariables.DEBUG): print("Refém salvo! Total: ", hostages_rescued)
+	if (GlobalVariables.DEBUG): print("Hostage saved! Total: ", hostages_rescued)
 
 func update_hostage_ui():
 	if hostage_label:
-		hostage_label.text = "Reféns: " + str(hostages_rescued) + "/" + str(total_hostages)
+		hostage_label.text = "Hostages: " + str(hostages_rescued) + "/" + str(total_hostages)
