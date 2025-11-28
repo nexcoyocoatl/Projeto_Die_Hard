@@ -11,14 +11,15 @@ config_version=5
 [application]
 
 config/name="Projeto_Die_Hard"
-run/main_scene="res://game.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+run/main_scene="res://Screens/home_screen.tscn"
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GlobalVariables="*res://global_variables.gd"
 CheckpointManager="*res://checkpoint_manager.gd"
+AudioManager="*res://audio_manager.tscn"
 
 [input]
 

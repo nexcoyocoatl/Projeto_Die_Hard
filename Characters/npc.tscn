@@ -1,10 +1,103 @@
-[gd_scene load_steps=6 format=3 uid="uid://k2amkrrjelcl"]
+[gd_scene load_steps=17 format=3 uid="uid://k2amkrrjelcl"]
 
 [ext_resource type="Script" uid="uid://clhpmdticle2" path="res://Characters/npc.gd" id="1_xxcha"]
-[ext_resource type="Texture2D" uid="uid://bf8bxnu0huryg" path="res://icon.svg" id="2_kh24r"]
+[ext_resource type="Texture2D" uid="uid://bms7y4vi5ryw8" path="res://Characters/Sprites/NPC/Fighter/NPC_Fighter_Back.png" id="3_ltm4c"]
+[ext_resource type="Texture2D" uid="uid://8clr1l0jo0h6" path="res://Characters/Sprites/NPC/Fighter/NPC_Fighter_Front.png" id="4_haaxj"]
+[ext_resource type="Texture2D" uid="uid://c18du65pty4c5" path="res://Characters/Sprites/NPC/Fighter/NPC_Fighter_Left.png" id="5_qbelu"]
+[ext_resource type="Texture2D" uid="uid://ie3pubq883gt" path="res://Characters/Sprites/NPC/Fighter/NPC_Fighter_Right.png" id="6_pq7xk"]
+[ext_resource type="Texture2D" uid="uid://kdpebpkkyl1o" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Back_Idle.png" id="7_8lpux"]
+[ext_resource type="Texture2D" uid="uid://dt8vdvawkxmf8" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Back_Aiming.png" id="8_kujwk"]
+[ext_resource type="Texture2D" uid="uid://cdblwchngiai3" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Front_Idle.png" id="9_5hipt"]
+[ext_resource type="Texture2D" uid="uid://c2vaevngjrrql" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Front_Aiming.png" id="10_61gnx"]
+[ext_resource type="Texture2D" uid="uid://bl08jyl8mlai0" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Left_Idle.png" id="11_pmnlb"]
+[ext_resource type="Texture2D" uid="uid://dvbkcx2wetqjl" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Left_Aiming.png" id="12_5tlyq"]
+[ext_resource type="Texture2D" uid="uid://u4j2odj3ulg5" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Right_Idle.png" id="13_xn1sj"]
+[ext_resource type="Texture2D" uid="uid://bmyxggmj4d5fn" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Right_Aiming.png" id="14_k43o1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7jktm"]
-size = Vector2(32, 32)
+size = Vector2(30, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wuok1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ltm4c")
+}],
+"loop": false,
+"name": &"Back",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_haaxj")
+}],
+"loop": false,
+"name": &"Front",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_qbelu")
+}],
+"loop": false,
+"name": &"Left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_pq7xk")
+}],
+"loop": false,
+"name": &"Right",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qc5e3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_8lpux")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_kujwk")
+}],
+"loop": false,
+"name": &"Back",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_5hipt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_61gnx")
+}],
+"loop": false,
+"name": &"Front",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("11_pmnlb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_5tlyq")
+}],
+"loop": false,
+"name": &"Left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_xn1sj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_k43o1")
+}],
+"loop": false,
+"name": &"Right",
+"speed": 5.0
+}]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_32lk6"]
 
@@ -13,11 +106,6 @@ size = Vector2(32, 32)
 [node name="Npc" type="CharacterBody2D" groups=["Npc"]]
 script = ExtResource("1_xxcha")
 mode = 0
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 0.688, 0.64, 1)
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("2_kh24r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_7jktm")
@@ -34,13 +122,13 @@ offset_bottom = -6.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DetectionCircle" type="Area2D" parent="."]
+[node name="FighterSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -17)
+sprite_frames = SubResource("SpriteFrames_wuok1")
+animation = &"Right"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionCircle"]
-shape = SubResource("CircleShape2D_32lk6")
-
-[node name="BarkAlert" type="Area2D" parent="."]
-monitoring = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BarkAlert"]
-shape = SubResource("CircleShape2D_6ybb6")
+[node name="ShooterSprite" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, -17)
+sprite_frames = SubResource("SpriteFrames_qc5e3")
+animation = &"Back"

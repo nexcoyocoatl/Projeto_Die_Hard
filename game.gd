@@ -5,7 +5,7 @@ extends Node2D
 @export var pause_time : bool = true		# Para pausar o jogo
 @export var move_cooldown : float = 0.3		# Cooldown para cada movimento (0.3 segundos para cada nova ação)
 @export_group("Scenes")
-@export var game_over_scene: PackedScene
+@export var game_over_scene: PackedScene 
 
 var input_direction : Vector2				# Direção de movimento do jogador
 var move_cooldown_timer : float = 0.0		# Timer para realizar o cooldown de movimento
@@ -14,8 +14,7 @@ var action_points : int = 0
 var player_action_queue = []
 @onready var world_moving : bool = false
 @onready var player : Player
-
-var current_scene : Level = null
+var current_scene : Level = null 
 
 func _ready() -> void:
 	world_moving = false
@@ -23,8 +22,8 @@ func _ready() -> void:
 	#pause_processing() # Pausa o jogo no início e a cada ação do jogador, para imitar o Nethack
 	player = get_tree().get_nodes_in_group("Player")[0]
 	if player:
-		player.player_died.connect(_on_player_died)
-
+		player.player_died.connect(_on_player_died) 
+	
 # Ativa movimentos pelo input, que funciona por eventos de botões pressionados
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -107,20 +106,27 @@ func stop_world():
 # Função para chamar todos filhos Movable para executarem um movimento
 func move_world():
 	awaiting_done_confirmation = get_tree().get_nodes_in_group("Npc").size()
+	awaiting_done_confirmation = get_tree().get_nodes_in_group("Hostages").size()
 	awaiting_done_confirmation += 1 # player
 	get_tree().call_group("Player", "receive_action", player_action_queue.pop_front())
 	get_tree().call_group("Npc", "receive_points")
+	get_tree().call_group("Hostages", "receive_points") 
+	AudioManager.play_sfx("pass_time")
 	
-func goto_scene(path: String):
-	current_scene.free()
-	var new_scene : PackedScene = ResourceLoader.load(path)
+func change_level(path: String):
+	current_scene.queue_free() 
+	await get_tree().process_frame 
+	var new_scene := load(path)
 	current_scene = new_scene.instantiate()
-	#scene_limit = null # indica a troca de cena
 	add_child(current_scene)
+	await get_tree().process_frame 
+	player = get_tree().get_nodes_in_group("Player")[0]
+	if player:
+		player.player_died.connect(_on_player_died)
 	
 func _on_player_died():
 	if(GlobalVariables.DEBUG): print("Received death signal. Game over.")
 	if game_over_scene:
 		get_tree().root.add_child.call_deferred(game_over_scene.instantiate())
 	else:
-		get_tree().reload_current_scene()
+		get_tree().reload_current_scene() 

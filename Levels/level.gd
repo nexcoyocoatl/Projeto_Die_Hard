@@ -4,6 +4,10 @@ class_name Level
 var logical_tilemap : TileMapLayer
 var pathfinding_grid : AStarGrid2D = AStarGrid2D.new()
 var player : Player
+var hostage_scene : PackedScene = preload("res://hostage.tscn")
+var hostages_rescued : int = 0
+var total_hostages : int = 0
+@onready var hostage_label = $HUD/HostageLabel
 
 func init_pathgrid():
 	# Pathfinding
@@ -52,9 +56,18 @@ func _ready() -> void:
 		npc.player = player
 		npc.tilemap_layer = logical_tilemap
 		npc.pathfinding_grid = pathfinding_grid
-		add_child(npc)
+		npc.defaul_look_rotation = rad_to_deg( ( npc.path.curve.get_point_position(1) - npc.path.curve.get_point_position(0) ).angle() )
 		npc.position = npc.path.curve.get_point_position(0)
+		add_child(npc)
+	
+	# Tosqueira pra desenhar as partes do foreground em cima de tudo
+	var foregroundNode = $Foreground
+	remove_child(foregroundNode)
+	add_child(foregroundNode)
+	
+	call_deferred("count_hostages")
 
+		
 func load_checkpoint() -> bool:
 	if player in CheckpointManager.player_checkpoint_positions:
 		player.visible = true
@@ -87,10 +100,43 @@ func load_checkpoint() -> bool:
 					npc.aiming_timer = data["aiming_timer"]
 				if data.has("cone_ray_target_pos"):
 					npc.cone_ray.target_position = data["cone_ray_target_pos"]
+				if data.has("cone_ray_rotation"):
+					npc.cone_ray.rotation_degrees = data["cone_ray_rotation"]
+				if data.has("player_found"):
+					npc.player_found = data["player_found"]
 				if data.has("last_player_position"):
 					npc.last_player_position = data["last_player_position"]
 				if data.has("feedback_label_visible"):
 					npc.feedback_label.visible = data["feedback_label_visible"]
-					
+		
+		for hostage_position in CheckpointManager.hostage_positions.keys():
+			var hostage : Hostage = hostage_scene.instantiate()
+			hostage.add_to_group("Hostages")
+			hostage.position = hostage_position
+			add_child(hostage)
+		hostages_rescued = CheckpointManager.hostages_rescued
+		var hostages = get_tree().get_nodes_in_group("Hostages")
+		for h in hostages:
+			h.rescued.connect(_on_hostage_rescued)
+		update_hostage_ui()
+
 		return true
 	return false
+	
+func count_hostages():
+	var hostages = get_tree().get_nodes_in_group("Hostages")
+	for h in hostages:
+		h.rescued.connect(_on_hostage_rescued)
+	total_hostages = hostages.size()
+	hostages_rescued = 0
+	update_hostage_ui()
+
+func _on_hostage_rescued():
+	hostages_rescued += 1
+	update_hostage_ui()
+	
+	if (GlobalVariables.DEBUG): print("Hostage saved! Total: ", hostages_rescued)
+
+func update_hostage_ui():
+	if hostage_label:
+		hostage_label.text = "Hostages: " + str(hostages_rescued) + "/" + str(total_hostages)

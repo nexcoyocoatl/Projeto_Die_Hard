@@ -25,6 +25,8 @@ enum Direction {
 var tilemap_layer : TileMapLayer = null
 var player : CharacterBody2D = null
 
+var animation_sprite : AnimatedSprite2D = null
+
 # Pathfinding
 @export_category("Script Exports")
 @export_group("Pathfinding")
@@ -74,6 +76,7 @@ var player_found : bool = false
 # Do jeito que tá, ele pode atirar quando uma mínima parte do cone encosta no jogador
 var is_shooting : bool = false	# Quando atira (cone fica vermelho)
 var cone_ray : RayCast2D
+var defaul_look_rotation : float
 var cone_polygon : PackedVector2Array = []
 
 # --- ADIÇÕES PARA O DOG ---
@@ -92,18 +95,14 @@ func _ready() -> void:
 	# TODO: Temporário? (ver outra forma, talvez?)
 	if (path.name.contains("Shooter")):
 		npc_type = NpcType.SHOOTER
-		moves_per_turn = 1 # <-- Movimento definido como 1
-		$Sprite2D.modulate = Color(1.0, 0.47, 0.47, 1.0)
-		
+		$ShooterSprite.modulate.a = 1.0
+		$FighterSprite.modulate.a = 0.0
+		animation_sprite = $ShooterSprite
 	elif (path.name.contains("Fighter")):
 		npc_type = NpcType.FIGHTER
-		moves_per_turn = 1 # <-- Movimento definido como 1
-		$Sprite2D.modulate = Color(0.85, 1.0, 0.47, 1.0)
-		
-	elif (path.name.contains("Dog")):
-		npc_type = NpcType.DOG
-		moves_per_turn = 2 # <-- Movimento definido como 2
-		$Sprite2D.modulate = Color(0.514, 0.322, 0.05, 1.0) 
+		$FighterSprite.modulate.a = 1.0
+		$ShooterSprite.modulate.a = 0.0
+		animation_sprite = $FighterSprite
 	
 	#Configuração Específica por TIPO 
 		#Configuração Específica do DOG
@@ -129,6 +128,11 @@ func _ready() -> void:
 		cone_ray.collide_with_areas = true # Colide com areas2d também
 		
 	feedback_label = $Label
+	cone_ray_dist_alert *= GlobalVariables.TILE_SIZE
+	cone_ray_dist = cone_ray_dist * GlobalVariables.TILE_SIZE # variável de alcance em tiles
+	cone_ray.target_position = Vector2(cone_ray_dist,0)
+	cone_ray.collide_with_areas = true # Colide com areas2d também
+	cone_ray.rotation_degrees = defaul_look_rotation
 	if feedback_label:
 		feedback_label.visible = false
 	
@@ -147,6 +151,10 @@ func _draw() -> void:
 func _process(_delta) -> void:
 	if (player_found):
 		player_found = false
+			# CORREÇÃO: Só toca se o NPC NÃO estava em alerta antes
+		if not alert:
+			AudioManager.play_sfx("alert")
+			
 		alert = true
 		detect_player()
 		cone_ray_angle = cone_ray_angle_alert
@@ -173,15 +181,23 @@ func _process(_delta) -> void:
 					mode = Mode.FOLLOW
 			
 		else:
-			match direction:
-				Direction.UP:
-					cone_ray.rotation_degrees = 270
-				Direction.DOWN:
-					cone_ray.rotation_degrees = 90
-				Direction.LEFT:
-					cone_ray.rotation_degrees = 180
-				Direction.RIGHT:
-					cone_ray.rotation_degrees = 0
+			var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+			if patrol_path.has(current_position) and patrol_path.size() == 2:
+				cone_ray.rotation_degrees = defaul_look_rotation
+			else:
+				match direction:
+					Direction.UP:
+						cone_ray.rotation_degrees = 270
+						animation_sprite.play("Front")
+					Direction.DOWN:
+						cone_ray.rotation_degrees = 90
+						animation_sprite.play("Back")
+					Direction.LEFT:
+						cone_ray.rotation_degrees = 180
+						animation_sprite.play("Left")
+					Direction.RIGHT:
+						cone_ray.rotation_degrees = 0
+						animation_sprite.play("Right")
 				
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
@@ -297,16 +313,23 @@ func patrol() -> void:
 	if patrol_path.is_empty():
 		move_finished()
 		return
+		
 	var current_position: Vector2i = (global_position / GlobalVariables.TILE_SIZE).floor()
+	
 	# se npc ainda não está no caminho de patrulha, vai até ele
 	if !patrol_path.has(current_position):
 		current_patrol_index = find_closest_path_point(current_position)
 		go_towards_position(current_position, patrol_path[current_patrol_index])
 		return
+		
 	# chegou no caminho de patrulha, segue de onde está
-	if current_patrol_index == patrol_path.size() - 1: current_patrol_index = 1
-	else: current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
+	if current_patrol_index == patrol_path.size() - 1: 
+		current_patrol_index = 1
+	else: 
+		current_patrol_index = (current_patrol_index + 1) % patrol_path.size()
+		
 	var target: Vector2 = Vector2(patrol_path[current_patrol_index]) * GlobalVariables.TILE_SIZE + Vector2(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
+	AudioManager.play_sfx("npc_step")
 	var tween = create_tween()
 	
 	# Facing direction
@@ -415,6 +438,7 @@ func shoot():
 	if(GlobalVariables.DEBUG): print("NPC SHOOTER: FIRE!")
 	feedback_label.visible = false
 	is_shooting = true # Ativa o cone vermelho
+	AudioManager.play_sfx("shoot")
 	
 	player.die()
 	
@@ -425,8 +449,8 @@ func shoot():
 	tween.tween_callback(move_finished)
 
 func attack_melee():
-	if(GlobalVariables.DEBUG): print("NPC FIGHTER ou DOG: ATTACK!")
-	
+	if(GlobalVariables.DEBUG): print("NPC FIGHTER: ATTACK!")
+	AudioManager.play_sfx("attack")
 	player.die()
 	
 	moves_remaining = 0 #Ação de ataque deve consumir todos os movimentos restantes do turno
