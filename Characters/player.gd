@@ -26,11 +26,18 @@ func _ready() -> void:
 	self.position = Vector2i(self.position/GlobalVariables.TILE_SIZE)*GlobalVariables.TILE_SIZE + Vector2i(GlobalVariables.TILE_SIZE/2.0, GlobalVariables.TILE_SIZE/2.0)
 	
 	self.noise.body_entered.connect(_on_noise)
+	self.noise.area_entered.connect(_on_noise_area_entered)
 	self.noise.monitoring = false
 	
 func _on_noise(body):
-	if body is Npc:
-		body.detect_player()
+	if body is Npc and body.npc_type != Npc.NpcType.DOG: #Agora só funciona se for um NPC E NÃO for um DOG
+		body.detect_player() 
+		
+func _on_noise_area_entered(area):
+	if area.name == "DetectionCircle": #Se a área de som tocou o círculo de detecção
+		var npc = area.get_owner()
+		if npc is Npc and npc.npc_type == Npc.NpcType.DOG: #Verifica se o dono é um DOG
+			npc.hear_sound(self.global_position) #Chama a nova função de investigar som
 
 func receive_tilemap(tilemap : TileMapLayer, pathgrid : AStarGrid2D) -> void:
 	self.tilemap_layer = tilemap

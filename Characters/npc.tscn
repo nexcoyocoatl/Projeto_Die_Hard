@@ -99,6 +99,10 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_32lk6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6ybb6"]
+
 [node name="Npc" type="CharacterBody2D" groups=["Npc"]]
 script = ExtResource("1_xxcha")
 mode = 0
