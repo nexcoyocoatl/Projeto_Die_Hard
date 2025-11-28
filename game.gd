@@ -30,6 +30,7 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			if Input.is_action_pressed("reset"):
 				current_scene.load_checkpoint.call_deferred()
+				AudioManager.play_sfx("reload")
 				return
 				
 			if (pause_time):
@@ -53,6 +54,8 @@ func _input(event: InputEvent) -> void:
 
 				if (input_direction != Vector2.ZERO):
 					player_action_queue.push_back(input_direction)
+				else:
+					AudioManager.play_sfx("pass_time")
 
 # Utilizado para movimentação também
 # (física roda diferente e de forma mais consistente que process, utilizar quando utilizar delta)

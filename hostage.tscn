@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bebxe02glmvp"]
+[gd_scene load_steps=23 format=3 uid="uid://bebxe02glmvp"]
 
 [ext_resource type="Script" uid="uid://dqx1smn2lqlst" path="res://hostage.gd" id="1_2cphn"]
 [ext_resource type="Texture2D" uid="uid://tcxrqpcs86kp" path="res://Characters/character_base.png" id="3_ovy40"]
@@ -7,9 +7,115 @@
 [ext_resource type="Texture2D" uid="uid://14moaln771ji" path="res://Characters/Sprites/Hostage/hostage2.png" id="6_ngxey"]
 [ext_resource type="Texture2D" uid="uid://b08b880567h7j" path="res://Characters/Sprites/Hostage/hostage_wink.png" id="7_aa721"]
 [ext_resource type="Texture2D" uid="uid://didw8oln4bp0n" path="res://Textures/Misc/hostage_rescued.png" id="7_ovy40"]
+[ext_resource type="AudioStream" uid="uid://bwn5o5wtmf3w6" path="res://SFX/hostage_call1.wav" id="8_e40ts"]
+[ext_resource type="AudioStream" uid="uid://blnbu1ceo81fp" path="res://SFX/hostage_call2.wav" id="9_yt68e"]
+[ext_resource type="AudioStream" uid="uid://bcijqj0ixmk0q" path="res://SFX/hostage_call3.wav" id="10_brdyi"]
+[ext_resource type="AudioStream" uid="uid://bbhsaxh7ty84c" path="res://SFX/hostage_call4.wav" id="11_7oyv3"]
+[ext_resource type="AudioStream" uid="uid://dfkcu4m2u3vn7" path="res://SFX/hostage_call5.wav" id="12_skq4g"]
+[ext_resource type="AudioStream" uid="uid://bcp0hl6dta6mg" path="res://SFX/hostage_call6.wav" id="13_4v71w"]
+[ext_resource type="AudioStream" uid="uid://bb7k8024p13lj" path="res://SFX/hostage_call7.wav" id="14_rhft2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgpst"]
 size = Vector2(32, 32)
+
+[sub_resource type="Animation" id="Animation_yt68e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"default"]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2, -24)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HelpSpeechBaloon:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(36, -70)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("HelpSpeechBaloon:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("AnimatedSprite2D:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("CharacterBase:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HostageRescuedSprite:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("HostageRescuedSprite:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.09722221, 0.09722221)]
+}
 
 [sub_resource type="Animation" id="Animation_gef2w"]
 resource_name = "idle"
@@ -141,105 +247,6 @@ tracks/5/keys = {
 "values": [Vector2(0.09722221, 0.09722221), Vector2(0.4, 0.4)]
 }
 
-[sub_resource type="Animation" id="Animation_yt68e"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:animation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [&"default"]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AnimatedSprite2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(2, -24)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("HelpSpeechBaloon:position")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(36, -70)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("HelpSpeechBaloon:modulate")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("AnimatedSprite2D:modulate")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("CharacterBase:modulate")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("HostageRescuedSprite:modulate")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("HostageRescuedSprite:scale")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0.09722221, 0.09722221)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brdyi"]
 _data = {
 &"RESET": SubResource("Animation_yt68e"),
@@ -275,6 +282,16 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_e40ts"]
+streams_count = 7
+stream_0/stream = ExtResource("8_e40ts")
+stream_1/stream = ExtResource("9_yt68e")
+stream_2/stream = ExtResource("10_brdyi")
+stream_3/stream = ExtResource("11_7oyv3")
+stream_4/stream = ExtResource("12_skq4g")
+stream_5/stream = ExtResource("13_4v71w")
+stream_6/stream = ExtResource("14_rhft2")
+
 [node name="Hostage" type="Area2D" groups=["Hostages"]]
 script = ExtResource("1_2cphn")
 
@@ -304,3 +321,7 @@ modulate = Color(1, 1, 1, 0)
 position = Vector2(0, 1.7881393e-07)
 scale = Vector2(0.09722221, 0.09722221)
 texture = ExtResource("7_ovy40")
+
+[node name="HostageCall" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_e40ts")
+max_distance = 512.0

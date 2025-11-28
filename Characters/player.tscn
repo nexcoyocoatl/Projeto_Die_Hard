@@ -1,10 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://clbdybjufnd0r"]
 
 [ext_resource type="Script" uid="uid://cvgxwqeg0wd3v" path="res://Characters/player.gd" id="1_onrkg"]
-[ext_resource type="Texture2D" uid="uid://d3e3vve4m3hrl" path="res://Characters/Sprites/Player/JohnMcClane_Back.png" id="2_l48on"]
-[ext_resource type="Texture2D" uid="uid://den2hh5p8v4qf" path="res://Characters/Sprites/Player/JohnMcClane_Front.png" id="3_4m0gv"]
-[ext_resource type="Texture2D" uid="uid://brckj673rosjw" path="res://Characters/Sprites/Player/JohnMcClane_Left.png" id="4_p728j"]
-[ext_resource type="Texture2D" uid="uid://nu3vechdc21q" path="res://Characters/Sprites/Player/JohnMcClane_Right.png" id="5_5slg2"]
+[ext_resource type="Texture2D" uid="uid://d2aq1m03n8hrr" path="res://Characters/Sprites/Player/JohnMcClane_Back.png" id="2_l48on"]
+[ext_resource type="Texture2D" uid="uid://tm38qqweqp3a" path="res://Characters/Sprites/Player/JohnMcClane_Front.png" id="3_4m0gv"]
+[ext_resource type="Texture2D" uid="uid://byu5jsomhxq5" path="res://Characters/Sprites/Player/JohnMcClane_Left.png" id="4_p728j"]
+[ext_resource type="Texture2D" uid="uid://cypkntk25mrv8" path="res://Characters/Sprites/Player/JohnMcClane_Right.png" id="5_5slg2"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_w3rah"]
 animations = [{
@@ -64,3 +64,6 @@ collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Noise"]
 shape = SubResource("CircleShape2D_eovys")
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true

@@ -5,9 +5,11 @@ signal rescued
 
 var is_rescued : bool = false
 var moving = false
+var player
 
 func _ready():
 	$HelpSpeechBaloon.modulate.a = 0.0
+	player = get_tree().get_nodes_in_group("Player")[0]
 	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body):
@@ -25,6 +27,9 @@ func receive_points():
 
 func move():
 	$AnimationPlayer.play("jump")
+	
+	if (self.global_position.distance_to(player.global_position) > 128) and (!$HostageCall.playing):
+		$HostageCall.play()
 	move_finished()
 	
 func move_finished() -> void:
@@ -34,7 +39,8 @@ func move_finished() -> void:
 
 func rescue():
 	if(GlobalVariables.DEBUG): print("Hostage saved!")
+	is_rescued = true
 	$AnimationPlayer.play("saved")
 	emit_signal("rescued")
 	$HelpSpeechBaloon.modulate.a = 0.0
-	is_rescued = true
+	AudioManager.play_sfx("rescue")

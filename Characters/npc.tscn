@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://k2amkrrjelcl"]
+[gd_scene load_steps=21 format=3 uid="uid://k2amkrrjelcl"]
 
 [ext_resource type="Script" uid="uid://clhpmdticle2" path="res://Characters/npc.gd" id="1_xxcha"]
 [ext_resource type="Texture2D" uid="uid://bms7y4vi5ryw8" path="res://Characters/Sprites/NPC/Fighter/NPC_Fighter_Back.png" id="3_ltm4c"]
@@ -12,7 +12,10 @@
 [ext_resource type="Texture2D" uid="uid://bl08jyl8mlai0" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Left_Idle.png" id="11_pmnlb"]
 [ext_resource type="Texture2D" uid="uid://dvbkcx2wetqjl" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Left_Aiming.png" id="12_5tlyq"]
 [ext_resource type="Texture2D" uid="uid://u4j2odj3ulg5" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Right_Idle.png" id="13_xn1sj"]
+[ext_resource type="AudioStream" uid="uid://blyfuw4eo8lue" path="res://SFX/npc_step1.wav" id="14_haaxj"]
 [ext_resource type="Texture2D" uid="uid://bmyxggmj4d5fn" path="res://Characters/Sprites/NPC/Shooter/NPC_Shooter_Right_Aiming.png" id="14_k43o1"]
+[ext_resource type="AudioStream" uid="uid://boeuxcdgwxd0r" path="res://SFX/npc_step2.wav" id="15_qbelu"]
+[ext_resource type="AudioStream" uid="uid://buyljr8gnlfrt" path="res://SFX/alert.wav" id="16_qbelu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7jktm"]
 size = Vector2(30, 30)
@@ -99,6 +102,29 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AudioStreamInteractive" id="AudioStreamInteractive_haaxj"]
+clip_count = 2
+clip_0/name = &"Npc Step 1"
+clip_0/stream = ExtResource("14_haaxj")
+clip_0/auto_advance = 0
+clip_1/name = &"Npc Step 2"
+clip_1/stream = ExtResource("15_qbelu")
+clip_1/auto_advance = 0
+_transitions = {
+Vector2i(0, 1): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 3,
+"to_time": 1
+},
+Vector2i(1, 0): {
+"fade_beats": 1.0,
+"fade_mode": 4,
+"from_time": 3,
+"to_time": 1
+}
+}
+
 [node name="Npc" type="CharacterBody2D" groups=["Npc"]]
 script = ExtResource("1_xxcha")
 mode = 0
@@ -128,3 +154,12 @@ modulate = Color(1, 1, 1, 0)
 position = Vector2(0, -17)
 sprite_frames = SubResource("SpriteFrames_qc5e3")
 animation = &"Back"
+
+[node name="Steps" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamInteractive_haaxj")
+max_distance = 768.0
+playback_type = 1
+
+[node name="Alert" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("16_qbelu")
+attenuation = 25.106644
