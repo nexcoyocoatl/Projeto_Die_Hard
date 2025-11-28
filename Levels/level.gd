@@ -109,6 +109,10 @@ func load_checkpoint() -> bool:
 				if data.has("feedback_label_visible"):
 					npc.feedback_label.visible = data["feedback_label_visible"]
 		
+		for h : Hostage in get_tree().get_nodes_in_group("Hostages"):
+			h.queue_free()
+			await get_tree().process_frame 
+			
 		for hostage_position in CheckpointManager.hostage_positions.keys():
 			var hostage : Hostage = hostage_scene.instantiate()
 			hostage.add_to_group("Hostages")
@@ -117,7 +121,9 @@ func load_checkpoint() -> bool:
 		hostages_rescued = CheckpointManager.hostages_rescued
 		var hostages = get_tree().get_nodes_in_group("Hostages")
 		for h in hostages:
-			h.rescued.connect(_on_hostage_rescued)
+			if not h.rescued.is_connected(_on_hostage_rescued):
+				h.rescued.connect(_on_hostage_rescued)
+		
 		update_hostage_ui()
 
 		return true
