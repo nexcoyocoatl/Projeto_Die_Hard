@@ -153,10 +153,9 @@ func _process(_delta) -> void:
 				
 			if (mode == Mode.FOLLOW):
 				cone_ray.look_at(last_player_global_position)
-	
-	match_animation_direction_without_cone()
+			
 	create_cone()
-	
+	match_animation_direction_without_cone()
 
 # BAITA PORQUICE
 func match_animation_direction_without_cone():
