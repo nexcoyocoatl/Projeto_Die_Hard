@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bebxe02glmvp"]
+[gd_scene load_steps=15 format=3 uid="uid://bebxe02glmvp"]
 
 [ext_resource type="Script" uid="uid://dqx1smn2lqlst" path="res://hostage.gd" id="1_2cphn"]
 [ext_resource type="Texture2D" uid="uid://tcxrqpcs86kp" path="res://Characters/character_base.png" id="3_ovy40"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://ckuknf81g8wdx" path="res://Characters/Sprites/Hostage/hostage1.png" id="5_lroxo"]
 [ext_resource type="Texture2D" uid="uid://14moaln771ji" path="res://Characters/Sprites/Hostage/hostage2.png" id="6_ngxey"]
 [ext_resource type="Texture2D" uid="uid://b08b880567h7j" path="res://Characters/Sprites/Hostage/hostage_wink.png" id="7_aa721"]
+[ext_resource type="Texture2D" uid="uid://didw8oln4bp0n" path="res://Textures/Misc/hostage_rescued.png" id="7_ovy40"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgpst"]
 size = Vector2(32, 32)
@@ -102,6 +103,42 @@ tracks/2/keys = {
 "update": 1,
 "values": [&"default", &"wink", &"default"]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("CharacterBase:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(-0.033333335, 0.36666667, 0.4, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("HostageRescuedSprite:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.36666667, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("HostageRescuedSprite:scale")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(-0.03333333, 0.76666665),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.09722221, 0.09722221), Vector2(0.302, 0.302)]
+}
 
 [sub_resource type="Animation" id="Animation_yt68e"]
 length = 0.001
@@ -165,6 +202,42 @@ tracks/4/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("CharacterBase:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("HostageRescuedSprite:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("HostageRescuedSprite:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.09722221, 0.09722221)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_brdyi"]
 _data = {
@@ -224,3 +297,9 @@ texture = ExtResource("4_u145w")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(2, -24)
 sprite_frames = SubResource("SpriteFrames_7oyv3")
+
+[node name="HostageRescuedSprite" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0)
+position = Vector2(0, 1.7881393e-07)
+scale = Vector2(0.09722221, 0.09722221)
+texture = ExtResource("7_ovy40")
