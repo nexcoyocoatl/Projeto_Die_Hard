@@ -29,7 +29,8 @@ var sounds = {
 	"rescue": preload("res://SFX/hostage_rescued.wav"), 
 	"pass_time": preload("res://SFX/pass_time.wav"),
 	"reload": preload("res://SFX/reload.wav"),
-	"change_level": preload("res://SFX/change_level.wav")
+	"change_level": preload("res://SFX/change_level.wav"),
+	"final_screen": preload("res://SFX/finish_game.mp3")
 }
 
 func _ready():
